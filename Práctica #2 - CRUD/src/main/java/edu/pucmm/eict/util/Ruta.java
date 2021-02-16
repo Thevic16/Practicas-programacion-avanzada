@@ -10,6 +10,12 @@ public class Ruta {
     }
 
     public void ejecutarRutas(){
+
+        app.get("/", ctx -> {
+            // some code
+            ctx.redirect("/index");
+        });
+
         app.get("/index", ctx -> {
             // some code
             ctx.result("Pagina principal");

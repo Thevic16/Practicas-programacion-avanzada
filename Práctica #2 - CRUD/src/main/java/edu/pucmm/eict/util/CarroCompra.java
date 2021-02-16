@@ -6,8 +6,10 @@ public class CarroCompra {
     private long id;
     private List<Producto> listaProductos;
 
-    public CarroCompra(long id, List<Producto> listaProductos) {
-        this.id = id;
+    private static long cont =0;
+
+    public CarroCompra(List<Producto> listaProductos) {
+        this.id = cont++;
         this.listaProductos = listaProductos;
     }
 

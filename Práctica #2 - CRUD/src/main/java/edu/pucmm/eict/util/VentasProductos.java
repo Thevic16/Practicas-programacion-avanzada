@@ -9,8 +9,10 @@ public class VentasProductos {
     private String nombreCliente;
     private List<Producto> listaProductos;
 
+    private static long cont =0;
+
     public VentasProductos(long id, Date fechaCompra, String nombreCliente, List<Producto> listaProductos) {
-        this.id = id;
+        this.id = cont++;
         this.fechaCompra = fechaCompra;
         this.nombreCliente = nombreCliente;
         this.listaProductos = listaProductos;

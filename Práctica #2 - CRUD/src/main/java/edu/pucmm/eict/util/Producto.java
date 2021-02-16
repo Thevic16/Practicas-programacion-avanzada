@@ -7,8 +7,10 @@ public class Producto {
     private String nombre;
     private BigDecimal precio;
 
+    private static int cont =0;
+
     public Producto(int id, String nombre, BigDecimal precio) {
-        this.id = id;
+        this.id = cont++;
         this.nombre = nombre;
         this.precio = precio;
     }
