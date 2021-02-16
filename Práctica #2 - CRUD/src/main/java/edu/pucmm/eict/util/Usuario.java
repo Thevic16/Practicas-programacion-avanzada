@@ -34,4 +34,13 @@ public class Usuario {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public boolean login(String nombre, String password){
+        boolean login = false;
+
+        if(nombre.equals("admin") && password.equals("admin") ){
+            login = true;
+        }
+        return login;
+    }
 }

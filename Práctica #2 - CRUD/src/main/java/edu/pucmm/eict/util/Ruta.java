@@ -2,6 +2,7 @@ package edu.pucmm.eict.util;
 
 import io.javalin.Javalin;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class Ruta {
@@ -26,6 +27,19 @@ public class Ruta {
 
             ctx.result("Pagina principal");
         });
+
+        app.get("/agreagar/:idProducto/:nombreProducto/:precioProducto/:cantidadProducto", ctx -> {
+
+            int idProducto = ctx.pathParam("idProducto",Integer.class).get();
+            String nombreProducto = ctx.pathParam("nombreProducto");
+            BigDecimal precioProducto = ctx.pathParam("cantidadProducto",BigDecimal.class).get();
+            int cantidadProducto = ctx.pathParam("cantidadProducto",Integer.class).get();
+
+
+            ctx.result("Pagina principal");
+        });
+
+
 
     }
 

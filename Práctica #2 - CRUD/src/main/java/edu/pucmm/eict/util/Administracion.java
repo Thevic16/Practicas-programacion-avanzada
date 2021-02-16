@@ -28,5 +28,5 @@ public class Administracion {
     public void actualizarProducto(Producto productoAnterior,Producto productoActualizado) {
         this.listaProductos.set(listaProductos.indexOf(productoAnterior),productoActualizado);
     }
-    
+
 }
