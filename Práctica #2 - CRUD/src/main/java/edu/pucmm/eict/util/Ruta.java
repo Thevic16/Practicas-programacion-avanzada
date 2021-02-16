@@ -2,11 +2,15 @@ package edu.pucmm.eict.util;
 
 import io.javalin.Javalin;
 
+import java.util.List;
+
 public class Ruta {
     private Javalin app;
+    private List<Producto> listaProductos;
 
-    public Ruta (Javalin app){
+    public Ruta (Javalin app, List<Producto> listaProductos){
         this.app = app;
+        this.listaProductos = listaProductos;
     }
 
     public void ejecutarRutas(){
@@ -18,6 +22,8 @@ public class Ruta {
 
         app.get("/index", ctx -> {
             // some code
+            //CarroCompra carroCompra= new CarroCompra();
+
             ctx.result("Pagina principal");
         });
 
