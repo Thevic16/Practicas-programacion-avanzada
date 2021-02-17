@@ -1,12 +1,17 @@
 package edu.pucmm.eict.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Administracion {
     private List<ProductoMostrador> listaProductos;
+    private List<VentasProductos> ventasProductos;
+    private List<Usuario> usuarios;
 
-    public Administracion(List<ProductoMostrador> listaProductos) {
-        this.listaProductos = listaProductos;
+    public Administracion() {
+        this.listaProductos = new ArrayList<ProductoMostrador>();
+        this.ventasProductos = new ArrayList<VentasProductos>();
+        this.usuarios = new ArrayList<Usuario>();
     }
 
     public List<ProductoMostrador> getListaProductos() {
@@ -17,16 +22,47 @@ public class Administracion {
         this.listaProductos = listaProductos;
     }
 
-    public void agregarProducto(ProductoMostrador producto) {
-        this.listaProductos.add(producto);
+    public List<VentasProductos> getVentasProductos() {
+        return ventasProductos;
     }
 
-    public void eliminarProducto(ProductoMostrador producto) {
-        this.listaProductos.remove(producto);
+    public void setVentasProductos(List<VentasProductos> ventasProductos) {
+        this.ventasProductos = ventasProductos;
     }
 
-    public void actualizarProducto(ProductoMostrador productoAnterior,ProductoMostrador productoActualizado) {
-        this.listaProductos.set(listaProductos.indexOf(productoAnterior),productoActualizado);
+    public List<Usuario> getUsuarios() {
+        return usuarios;
+    }
+
+    public void setUsuarios(List<Usuario> usuarios) {
+        this.usuarios = usuarios;
+    }
+
+    public void agregarProducto(int id) {
+        this.listaProductos.add(encontrarProductoPorId(id));
+    }
+
+    public void eliminarProducto(int id) {
+        this.listaProductos.remove(encontrarProductoPorId(id));
+    }
+
+    public void actualizarProducto(int idProductoAnterior,ProductoMostrador productoActualizado) {
+        this.listaProductos.set(listaProductos.indexOf(encontrarProductoPorId(idProductoAnterior)),productoActualizado);
+    }
+
+    public ProductoMostrador encontrarProductoPorId(int id){
+        ProductoMostrador producto = null;
+        boolean encontrado = false;
+        int i = 0;
+
+        while (!encontrado && i < listaProductos.size()){
+            if(listaProductos.get(i).getId() == id){
+                encontrado = true;
+                producto = listaProductos.get(i);
+            }
+            i++;
+        }
+        return producto;
     }
 
 }

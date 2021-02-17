@@ -30,14 +30,15 @@ public class CarroCompra {
         this.listaProductos = listaProductos;
     }
 
-    public Producto encontrarProductoPorId(String id){
-        Producto producto = null;
+    public ProductoCarrito encontrarProductoPorId(int id){
+        ProductoCarrito producto = null;
         boolean encontrado = false;
         int i = 0;
 
         while (!encontrado && i < listaProductos.size()){
-            if(listaProductos.get(i) == producto){
+            if(listaProductos.get(i).getId() == id){
                 encontrado = true;
+                producto = listaProductos.get(i);
             }
             i++;
         }

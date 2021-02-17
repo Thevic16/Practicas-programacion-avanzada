@@ -11,7 +11,7 @@ public class VentasProductos {
 
     private static long cont =0;
 
-    public VentasProductos(long id, Date fechaCompra, String nombreCliente, List<ProductoCarrito> listaProductos) {
+    public VentasProductos(Date fechaCompra, String nombreCliente, List<ProductoCarrito> listaProductos) {
         this.id = cont++;
         this.fechaCompra = fechaCompra;
         this.nombreCliente = nombreCliente;

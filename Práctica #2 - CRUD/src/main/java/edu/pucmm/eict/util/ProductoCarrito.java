@@ -13,4 +13,28 @@ public class ProductoCarrito extends Producto{
         this.cantidad = cantidad;
         this.id = cont++;
     }
+
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public static int getCont() {
+        return cont;
+    }
+
+    public static void setCont(int cont) {
+        ProductoCarrito.cont = cont;
+    }
 }

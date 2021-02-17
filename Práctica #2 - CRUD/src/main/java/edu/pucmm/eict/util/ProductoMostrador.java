@@ -12,4 +12,20 @@ public class ProductoMostrador extends Producto {
         super(nombre, precio);
         this.id = cont++;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public static int getCont() {
+        return cont;
+    }
+
+    public static void setCont(int cont) {
+        ProductoMostrador.cont = cont;
+    }
 }
