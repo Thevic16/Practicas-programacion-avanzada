@@ -1,11 +1,9 @@
 package edu.pucmm.eict;
 
-import edu.pucmm.eict.util.Administracion;
-import edu.pucmm.eict.util.Producto;
-import edu.pucmm.eict.util.Ruta;
-import edu.pucmm.eict.util.Usuario;
+import edu.pucmm.eict.util.*;
 import io.javalin.Javalin;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +19,13 @@ public class Main {
         //Creando la instancia del servidor.
         Javalin app = Javalin.create().start(7000);
         app.config.addStaticFiles("/publico");
-        //app.get("/", ctx -> ctx.result("Hello World"));
+
+        /*Prueba agregando productos */
+        ProductoMostrador producto1 = new ProductoMostrador("Memoria",new BigDecimal("500.25"));
+        ProductoMostrador producto2 = new ProductoMostrador("Monitor",new BigDecimal("1000.25"));
+        ProductoMostrador producto3 = new ProductoMostrador("Mouse",new BigDecimal("200.25"));
+
+
 
         new Ruta(app,administracion).ejecutarRutas();
     }

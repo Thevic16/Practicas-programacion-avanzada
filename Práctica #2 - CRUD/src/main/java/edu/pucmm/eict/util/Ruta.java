@@ -4,7 +4,9 @@ import io.javalin.Javalin;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Ruta {
     private Javalin app;
@@ -17,16 +19,24 @@ public class Ruta {
 
     public void ejecutarRutas(){
 
-        app.get("/", ctx -> {
-            CarroCompra carroCompra= new CarroCompra(); // Creando carrito de compra, aqui se almacenan los productos del usuario.
-            ctx.sessionAttribute("carroCompra", carroCompra);
+        app.before(ctx -> {
+            // runs before all requests
+            if(ctx.sessionAttribute("carroCompra") == null){
+                CarroCompra carroCompra= new CarroCompra(); // Creando carrito de compra, aqui se almacenan los productos del usuario.
+                ctx.sessionAttribute("carroCompra", carroCompra);
+            }
+        });
 
+        app.get("/", ctx -> {
             ctx.redirect("/index");
         });
 
         //index
         app.get("/index", ctx -> {
-            ctx.result("Pagina index");
+            Map<String, Object> modelo = new HashMap<>();
+            modelo.put("productos",administracion.getListaProductos());
+
+            ctx.render("/templates/index/index.html",modelo);
         });
 
         app.get("/index/agreagar/:nombreProducto/:precioProducto/:cantidadProducto", ctx -> {
@@ -110,13 +120,14 @@ public class Ruta {
 
         //Login ventas realizadas
         app.get("/ventasRealizadas/login", ctx -> {
+            Map<String, Object> modelo = new HashMap<>();
+            modelo.put("accion","/ventasRealizadas/login");
 
-            ctx.result("login");
+            ctx.render("/templates/login/login.html",modelo);
         });
 
         app.post("/ventasRealizadas/login", ctx -> {
             String usuario = ctx.formParam("usuario");
-            String nombre = ctx.formParam("nombre");
             String password = ctx.formParam("password");
 
             ctx.redirect("/ventasRealizadas");
@@ -141,12 +152,16 @@ public class Ruta {
 
             VentasProductos ventasProductos = new VentasProductos(new Date(),nombreCliente,carroCompra.getListaProductos());
 
-            CarroCompra carroCompraNuevo= new CarroCompra(); // Creando carrito de compra nuevo, aqui se almacenan los productos del usuario.
-            ctx.sessionAttribute("carroCompra", carroCompraNuevo);
+            ctx.sessionAttribute("carroCompra", null); // Limpiando el carrito de compras
 
-            ctx.result("Carrito de compra");
+            ctx.redirect("/index");
         });
 
+        app.get("/carritoDeCompra/LimpiarCarroCompra/", ctx -> {
+            ctx.sessionAttribute("carroCompra", null); // Limpiando el carrito de compras
+
+            ctx.redirect("/index");
+        });
 
     }
 

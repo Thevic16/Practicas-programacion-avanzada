@@ -1,12 +1,18 @@
+edu/pucmm/eict/util/VentasProductos.java
+ edu.pucmm.eict.util.VentasProductos
+edu/pucmm/eict/util/ProductoCarrito.java
+ edu.pucmm.eict.util.ProductoCarrito
+edu/pucmm/eict/util/Administracion.java
+ edu.pucmm.eict.util.Administracion
+edu/pucmm/eict/util/ProductoMostrador.java
+ edu.pucmm.eict.util.ProductoMostrador
 edu/pucmm/eict/util/Producto.java
  edu.pucmm.eict.util.Producto
 edu/pucmm/eict/util/CarroCompra.java
  edu.pucmm.eict.util.CarroCompra
-edu/pucmm/eict/util/VentasProductos.java
- edu.pucmm.eict.util.VentasProductos
-edu/pucmm/eict/util/Usuario.java
- edu.pucmm.eict.util.Usuario
-edu/pucmm/eict/util/Ruta.java
- edu.pucmm.eict.util.Ruta
 edu/pucmm/eict/Main.java
  edu.pucmm.eict.Main
+edu/pucmm/eict/util/Ruta.java
+ edu.pucmm.eict.util.Ruta
+edu/pucmm/eict/util/Usuario.java
+ edu.pucmm.eict.util.Usuario
