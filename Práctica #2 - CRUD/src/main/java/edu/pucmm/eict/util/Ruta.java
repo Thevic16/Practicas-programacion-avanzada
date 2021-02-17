@@ -23,21 +23,31 @@ public class Ruta {
 
         app.get("/index", ctx -> {
             // some code
-            //CarroCompra carroCompra= new CarroCompra();
+            CarroCompra carroCompra= new CarroCompra(); // Creando carrito de compra, aqui se almacenan los productos del usuario.
+
+            ctx.sessionAttribute("carroCompra", carroCompra);
 
             ctx.result("Pagina principal");
         });
 
-        app.get("/agreagar/:idProducto/:nombreProducto/:precioProducto/:cantidadProducto", ctx -> {
+        app.get("/agreagar/:nombreProducto/:precioProducto/:cantidadProducto", ctx -> {
 
-            int idProducto = ctx.pathParam("idProducto",Integer.class).get();
             String nombreProducto = ctx.pathParam("nombreProducto");
             BigDecimal precioProducto = ctx.pathParam("cantidadProducto",BigDecimal.class).get();
             int cantidadProducto = ctx.pathParam("cantidadProducto",Integer.class).get();
 
 
-            ctx.result("Pagina principal");
+            ProductoCarrito productoCarrito = new ProductoCarrito(nombreProducto,precioProducto,cantidadProducto);
+
+            CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
+
+            carroCompra.agregarProducto(productoCarrito);
+
+
+            ctx.redirect("/index");
         });
+
+
 
 
 

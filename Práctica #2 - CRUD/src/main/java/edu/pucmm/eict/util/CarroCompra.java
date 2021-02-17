@@ -1,5 +1,6 @@
 package edu.pucmm.eict.util;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CarroCompra {
@@ -8,9 +9,9 @@ public class CarroCompra {
 
     private static long cont =0;
 
-    public CarroCompra(List<ProductoCarrito> listaProductos) {
+    public CarroCompra() {
         this.id = cont++;
-        this.listaProductos = listaProductos;
+        this.listaProductos = new ArrayList<ProductoCarrito>();
     }
 
     public long getId() {
@@ -42,5 +43,14 @@ public class CarroCompra {
         }
         return producto;
     }
+
+    public void agregarProducto(ProductoCarrito producto) {
+        this.listaProductos.add(producto);
+    }
+    public void eliminarProducto(ProductoCarrito producto) {
+        this.listaProductos.remove(producto);
+    }
+
+
 
 }

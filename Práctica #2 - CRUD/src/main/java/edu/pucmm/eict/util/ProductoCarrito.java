@@ -5,8 +5,12 @@ import java.math.BigDecimal;
 public class ProductoCarrito extends Producto{
     private int cantidad;
 
-    public ProductoCarrito(int id, String nombre, BigDecimal precio, int cantidad) {
-        super(id, nombre, precio);
+    private int id;
+    private static int cont =0;
+
+    public ProductoCarrito(String nombre, BigDecimal precio, int cantidad) {
+        super(nombre, precio);
         this.cantidad = cantidad;
+        this.id = cont++;
     }
 }

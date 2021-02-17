@@ -2,25 +2,15 @@ package edu.pucmm.eict.util;
 
 import java.math.BigDecimal;
 
-public class Producto {
-    private int id;
+public abstract class  Producto {
     private String nombre;
     private BigDecimal precio;
 
     private static int cont =0;
 
-    public Producto(int id, String nombre, BigDecimal precio) {
-        this.id = cont++;
+    public Producto(String nombre, BigDecimal precio) {
         this.nombre = nombre;
         this.precio = precio;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getNombre() {
