@@ -17,7 +17,7 @@ dependencies {
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
     compile 'io.javalin:javalin:3.13.0'
     compile "org.slf4j:slf4j-simple:1.7.30" // logger
-    compile "org.thymeleaf:thymeleaf:3.0.11.RELEASE" //thymeleaf
+    implementation "org.thymeleaf:thymeleaf:3.0.11.RELEASE" //thymeleaf
 }
 
 test {

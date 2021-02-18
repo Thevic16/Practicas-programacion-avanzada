@@ -38,8 +38,8 @@ public class Administracion {
         this.usuarios = usuarios;
     }
 
-    public void agregarProducto(int id) {
-        this.listaProductos.add(encontrarProductoPorId(id));
+    public void agregarProducto(ProductoMostrador producto) {
+        this.listaProductos.add(producto);
     }
 
     public void eliminarProducto(int id) {

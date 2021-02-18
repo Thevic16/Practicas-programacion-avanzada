@@ -42,6 +42,7 @@ public class Ruta {
             ctx.render("/templates/index/index.html",modelo);
         });
 
+        /*
         app.get("/index/agreagar/:nombreProducto/:precioProducto/:cantidadProducto", ctx -> {
 
             String nombreProducto = ctx.pathParam("nombreProducto");
@@ -172,10 +173,14 @@ public class Ruta {
             ctx.redirect("/index");
         });
 
+         */
+
     }
 
     private void registrandoPlantillas(){
         //registrando los sistemas de plantilla.
         JavalinRenderer.register(JavalinThymeleaf.INSTANCE, ".html");
     }
+
+
 }
