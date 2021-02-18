@@ -1,6 +1,8 @@
 package edu.pucmm.eict.util;
 
 import io.javalin.Javalin;
+import io.javalin.plugin.rendering.JavalinRenderer;
+import io.javalin.plugin.rendering.template.JavalinThymeleaf;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -15,6 +17,7 @@ public class Ruta {
     public Ruta (Javalin app, Administracion administracion){
         this.app = app;
         this.administracion = administracion;
+        registrandoPlantillas();
     }
 
     public void ejecutarRutas(){
@@ -130,13 +133,19 @@ public class Ruta {
             String usuario = ctx.formParam("usuario");
             String password = ctx.formParam("password");
 
-            ctx.redirect("/ventasRealizadas");
+            if (Usuario.login(usuario,password)){
+                ctx.redirect("/ventasRealizadas");
+            }
+            else{
+                ctx.redirect("/ventasRealizadas/login");
+            }
+
         });
 
         //Ventas Realizadas
         app.get("/ventasRealizadas", ctx -> {
 
-            ctx.result("Ventas Realizadas");
+            ctx.render("/templates/ventasRealizadas/ventasRealizadas.html");
         });
 
         //Carrito de compra
@@ -165,5 +174,8 @@ public class Ruta {
 
     }
 
-
+    private void registrandoPlantillas(){
+        //registrando los sistemas de plantilla.
+        JavalinRenderer.register(JavalinThymeleaf.INSTANCE, ".html");
+    }
 }

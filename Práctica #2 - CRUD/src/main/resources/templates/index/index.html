@@ -110,8 +110,8 @@
         <h1>&nbsp &nbsp &nbsp </h1>
         <a class="nav-link active" aria-current="page" href="#">Comprar</a>
         <a class="nav-link" href="/ventasRealizadas/login">Ventas Realizadas</a>
-        <a class="nav-link" href="#">Administrar Productos</a>
-        <a class="nav-link" href="#">Carrito (0)</a>
+        <a class="nav-link" href="/listarProductos/login">Administrar Productos</a>
+        <a class="nav-link" href="/carritoDeCompra">Carrito (0)</a>
       </nav>
       <br>
       <br>
@@ -131,9 +131,16 @@
       </tr>
       </thead>
       <tbody>
-      <tr th:each="producto : ${productos}">
+      <tr>
+        <!--
+        <tr th:each="producto : ${productos}">
         <th scope="row" th:text="${producto.nombre}" > Ram 64Gb </th>
         <td th:text="${producto.precio}" >15</td>
+        <td><input type="number" name="cantidad"></td>
+        <td><a href="#" class="btn btn-sm btn-secondary fw-bold border-white bg-white">Agregar</a></td> -->
+
+        <th scope="row"> Ram 64Gb </th>
+        <td>15</td>
         <td><input type="number" name="cantidad"></td>
         <td><a href="#" class="btn btn-sm btn-secondary fw-bold border-white bg-white">Agregar</a></td>
       </tr>
@@ -144,7 +151,7 @@
   </main>
 
   <footer class="mt-auto text-white-50">
-    <p>Cover template for <a href="https://getbootstrap.com/" class="text-white">Bootstrap</a>, by <a href="https://twitter.com/mdo" class="text-white">@mdo</a>.</p>
+    <p>Sitio de Compras, Por Víctor Gómez.</p>
   </footer>
 </div>
 

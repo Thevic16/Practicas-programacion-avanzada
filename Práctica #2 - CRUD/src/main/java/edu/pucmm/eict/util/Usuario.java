@@ -35,7 +35,7 @@ public class Usuario {
         this.password = password;
     }
 
-    public boolean login(String usuario, String password){
+    public static boolean login(String usuario, String password){
         boolean login = false;
 
         if(usuario.equals("admin") && password.equals("admin") ){

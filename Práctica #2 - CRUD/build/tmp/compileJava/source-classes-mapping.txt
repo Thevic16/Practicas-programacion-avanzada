@@ -10,9 +10,9 @@ edu/pucmm/eict/util/Producto.java
  edu.pucmm.eict.util.Producto
 edu/pucmm/eict/util/CarroCompra.java
  edu.pucmm.eict.util.CarroCompra
+edu/pucmm/eict/util/Usuario.java
+ edu.pucmm.eict.util.Usuario
 edu/pucmm/eict/Main.java
  edu.pucmm.eict.Main
 edu/pucmm/eict/util/Ruta.java
  edu.pucmm.eict.util.Ruta
-edu/pucmm/eict/util/Usuario.java
- edu.pucmm.eict.util.Usuario
