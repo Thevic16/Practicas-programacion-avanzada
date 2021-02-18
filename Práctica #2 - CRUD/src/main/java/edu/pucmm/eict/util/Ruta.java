@@ -99,6 +99,32 @@ public class Ruta {
             ctx.redirect("/index");
         });
 
+        //Login ventas realizadas
+        app.get("/ventasRealizadas/login", ctx -> {
+            Map<String, Object> modelo = new HashMap<>();
+            modelo.put("accion","/ventasRealizadas/login");
+
+            ctx.render("/templates/login/login.html",modelo);
+        });
+
+        app.post("/ventasRealizadas/login", ctx -> {
+            String usuario = ctx.formParam("usuario");
+            String password = ctx.formParam("password");
+
+            if (Usuario.login(usuario,password)){
+                ctx.redirect("/ventasRealizadas");
+            }
+            else{
+                ctx.redirect("/ventasRealizadas/login");
+            }
+        });
+
+        //Ventas Realizadas
+        app.get("/ventasRealizadas", ctx -> {
+
+            ctx.render("/templates/ventasRealizadas/ventasRealizadas.html");
+        });
+
 
         /*
 
@@ -147,32 +173,7 @@ public class Ruta {
             ctx.redirect("/listarProductos");
         });
 
-        //Login ventas realizadas
-        app.get("/ventasRealizadas/login", ctx -> {
-            Map<String, Object> modelo = new HashMap<>();
-            modelo.put("accion","/ventasRealizadas/login");
 
-            ctx.render("/templates/login/login.html",modelo);
-        });
-
-        app.post("/ventasRealizadas/login", ctx -> {
-            String usuario = ctx.formParam("usuario");
-            String password = ctx.formParam("password");
-
-            if (Usuario.login(usuario,password)){
-                ctx.redirect("/ventasRealizadas");
-            }
-            else{
-                ctx.redirect("/ventasRealizadas/login");
-            }
-
-        });
-
-        //Ventas Realizadas
-        app.get("/ventasRealizadas", ctx -> {
-
-            ctx.render("/templates/ventasRealizadas/ventasRealizadas.html");
-        });
 
          */
 
