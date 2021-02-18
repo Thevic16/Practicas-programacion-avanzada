@@ -72,8 +72,31 @@ public class Ruta {
         });
 
         app.post("/carritoDeCompra/eliminar/", ctx -> {
+            int id = ctx.formParam("id",Integer.class).get();
+
+            CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
+
+            carroCompra.eliminarProducto(id);
 
             ctx.redirect("/carritoDeCompra");
+        });
+
+        app.post("/carritoDeCompra/ProcesarCompra/", ctx -> {
+
+            String nombreCliente = ctx.formParam("nombreCliente");
+            CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
+
+            VentasProductos ventasProductos = new VentasProductos(new Date(),nombreCliente,carroCompra.getListaProductos());
+
+            ctx.sessionAttribute("carroCompra", null); // Limpiando el carrito de compras
+
+            ctx.redirect("/index");
+        });
+
+        app.get("/carritoDeCompra/LimpiarCarroCompra/", ctx -> {
+            ctx.sessionAttribute("carroCompra", null); // Limpiando el carrito de compras
+
+            ctx.redirect("/index");
         });
 
 
@@ -149,30 +172,6 @@ public class Ruta {
         app.get("/ventasRealizadas", ctx -> {
 
             ctx.render("/templates/ventasRealizadas/ventasRealizadas.html");
-        });
-
-        //Carrito de compra
-        app.get("/carritoDeCompra", ctx -> {
-
-            ctx.result("Carrito de compra");
-        });
-
-        app.get("/carritoDeCompra/ProcesarCompra/:nombreCliente/", ctx -> {
-
-            String nombreCliente = ctx.pathParam("nombreCliente");
-            CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
-
-            VentasProductos ventasProductos = new VentasProductos(new Date(),nombreCliente,carroCompra.getListaProductos());
-
-            ctx.sessionAttribute("carroCompra", null); // Limpiando el carrito de compras
-
-            ctx.redirect("/index");
-        });
-
-        app.get("/carritoDeCompra/LimpiarCarroCompra/", ctx -> {
-            ctx.sessionAttribute("carroCompra", null); // Limpiando el carrito de compras
-
-            ctx.redirect("/index");
         });
 
          */

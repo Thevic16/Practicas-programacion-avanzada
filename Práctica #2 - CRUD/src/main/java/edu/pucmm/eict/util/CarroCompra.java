@@ -48,8 +48,10 @@ public class CarroCompra {
     public void agregarProducto(ProductoCarrito producto) {
         this.listaProductos.add(producto);
     }
-    public void eliminarProducto(ProductoCarrito producto) {
-        this.listaProductos.remove(producto);
+
+    public void eliminarProducto(int id) {
+
+        this.listaProductos.remove(encontrarProductoPorId(id));
     }
 
 
