@@ -36,20 +36,22 @@ public class Ruta {
 
         //index
         app.get("/index", ctx -> {
+            CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
             Map<String, Object> modelo = new HashMap<>();
-            modelo.put("productos",administracion.getListaProductos());
+            modelo.put("productos",administracion.getListaProductosDisponibles(carroCompra));
+            modelo.put("cantidadCarrito", (carroCompra.getListaProductos().size()));
 
             ctx.render("/templates/index/index.html",modelo);
         });
 
-        /*
-        app.get("/index/agreagar/:nombreProducto/:precioProducto/:cantidadProducto", ctx -> {
 
-            String nombreProducto = ctx.pathParam("nombreProducto");
-            BigDecimal precioProducto = ctx.pathParam("cantidadProducto",BigDecimal.class).get();
-            int cantidadProducto = ctx.pathParam("cantidadProducto",Integer.class).get();
+        app.post("/index/agregar/", ctx -> {
+            int id = ctx.formParam("id",Integer.class).get();
+            int cantidadProducto = ctx.formParam("cantidad",Integer.class).get();
+            String nombreProducto = administracion.encontrarProductoPorId(id).getNombre();
+            BigDecimal precioProducto = administracion.encontrarProductoPorId(id).getPrecio();
 
-            ProductoCarrito productoCarrito = new ProductoCarrito(nombreProducto,precioProducto,cantidadProducto);
+            ProductoCarrito productoCarrito = new ProductoCarrito(id,nombreProducto,precioProducto,cantidadProducto);
 
             CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
 
@@ -58,25 +60,25 @@ public class Ruta {
             ctx.redirect("/index");
         });
 
+
         //carrito de compas
         app.get("/carritoDeCompra", ctx -> {
-            ctx.result("Pagina carrito de compra");
+            CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
+            Map<String, Object> modelo = new HashMap<>();
+            modelo.put("productos",carroCompra.getListaProductos());
+            modelo.put("cantidadCarrito", (carroCompra.getListaProductos().size()));
+
+            ctx.render("/templates/CarritoDeCompra/CarritoDeCompra.html",modelo);
         });
 
-        app.get("/carritoDeCompra/eliminar/:nombreProducto/:precioProducto/:cantidadProducto", ctx -> {
-
-            String nombreProducto = ctx.pathParam("nombreProducto");
-            BigDecimal precioProducto = ctx.pathParam("cantidadProducto",BigDecimal.class).get();
-            int cantidadProducto = ctx.pathParam("cantidadProducto",Integer.class).get();
-
-            ProductoCarrito productoCarrito = new ProductoCarrito(nombreProducto,precioProducto,cantidadProducto);
-
-            CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
-
-            carroCompra.eliminarProducto(productoCarrito);
+        app.post("/carritoDeCompra/eliminar/", ctx -> {
 
             ctx.redirect("/carritoDeCompra");
         });
+
+
+        /*
+
 
         //login ListarProductos
         app.get("/listarProductos/login", ctx -> {

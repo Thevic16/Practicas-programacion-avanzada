@@ -111,7 +111,7 @@
         <a class="nav-link active" aria-current="page" href="#">Comprar</a>
         <a class="nav-link" href="/ventasRealizadas/login">Ventas Realizadas</a>
         <a class="nav-link" href="/listarProductos/login">Administrar Productos</a>
-        <a class="nav-link" href="/carritoDeCompra">Carrito (0)</a>
+        <a class="nav-link" href="/carritoDeCompra" th:text="'Carrito('+${cantidadCarrito}+')'" >Carrito (0)</a>
       </nav>
       <br>
       <br>
@@ -131,11 +131,16 @@
       </tr>
       </thead>
       <tbody>
-        <tr th:each="producto : ${productos}">
-        <th scope="row" th:text="${producto.nombre}" > Ram 64Gb </th>
-        <td th:text="${producto.precio}" >15</td>
-        <td><input type="number" name="cantidad"></td>
-        <td><a href="#" class="btn btn-sm btn-secondary fw-bold border-white bg-white">Agregar</a></td>
+
+        <form method="post" action="/index/agregar/" id="form1">
+          <tr th:each="producto : ${productos}">
+          <th scope="row" th:text="${producto.nombre}" > Ram 64Gb </th>
+          <td th:text="${producto.precio}" >15</td>
+          <td><input type="number" name="cantidad"></td>
+          <td><button type="submit" class="btn btn-light" form="form1">Agregar</button></td>
+          <td><input type="hidden" id = "id" name="id" th:value="${producto.id}"></td>
+        </form>
+
 
         <!--
         <th scope="row"> Ram 64Gb </th>

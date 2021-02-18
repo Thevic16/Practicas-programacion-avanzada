@@ -18,6 +18,18 @@ public class Administracion {
         return listaProductos;
     }
 
+    public List<ProductoMostrador> getListaProductosDisponibles(CarroCompra carroCompra) {
+        List<ProductoMostrador> listaProductosDisponibles = new ArrayList<ProductoMostrador>();
+
+        for (ProductoMostrador productoMostrador:listaProductos) {
+            if(carroCompra.encontrarProductoPorId(productoMostrador.getId()) == null){
+                listaProductosDisponibles.add(productoMostrador);
+            }
+        }
+
+        return listaProductosDisponibles;
+    }
+
     public void setListaProductos(List<ProductoMostrador> listaProductos) {
         this.listaProductos = listaProductos;
     }

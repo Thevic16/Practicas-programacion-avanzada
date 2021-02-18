@@ -6,12 +6,11 @@ public class ProductoCarrito extends Producto{
     private int cantidad;
 
     private int id;
-    private static int cont =0;
 
-    public ProductoCarrito(String nombre, BigDecimal precio, int cantidad) {
+    public ProductoCarrito(int id,String nombre, BigDecimal precio, int cantidad) {
         super(nombre, precio);
         this.cantidad = cantidad;
-        this.id = cont++;
+        this.id = id;
     }
 
     public int getCantidad() {
@@ -30,11 +29,4 @@ public class ProductoCarrito extends Producto{
         this.id = id;
     }
 
-    public static int getCont() {
-        return cont;
-    }
-
-    public static void setCont(int cont) {
-        ProductoCarrito.cont = cont;
-    }
 }

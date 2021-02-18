@@ -33,7 +33,6 @@ public class Main {
         administracion.agregarProducto(producto3);
 
 
-
         new Ruta(app,administracion).ejecutarRutas();
     }
 
