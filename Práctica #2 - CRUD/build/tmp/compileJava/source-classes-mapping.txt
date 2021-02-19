@@ -8,11 +8,11 @@ edu/pucmm/eict/util/ProductoMostrador.java
  edu.pucmm.eict.util.ProductoMostrador
 edu/pucmm/eict/util/Usuario.java
  edu.pucmm.eict.util.Usuario
-edu/pucmm/eict/Main.java
- edu.pucmm.eict.Main
-edu/pucmm/eict/util/VentasProductos.java
- edu.pucmm.eict.util.VentasProductos
 edu/pucmm/eict/util/Administracion.java
  edu.pucmm.eict.util.Administracion
+edu/pucmm/eict/util/VentasProductos.java
+ edu.pucmm.eict.util.VentasProductos
+edu/pucmm/eict/Main.java
+ edu.pucmm.eict.Main
 edu/pucmm/eict/util/Ruta.java
  edu.pucmm.eict.util.Ruta

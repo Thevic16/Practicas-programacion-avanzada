@@ -43,6 +43,8 @@ public class Ruta {
             modelo.put("productos",administracion.getListaProductosDisponibles(carroCompra));
             modelo.put("cantidadCarrito", (carroCompra.getListaProductos().size()));
 
+            this.login = false;
+
             ctx.render("/templates/index/index.html",modelo);
         });
 
@@ -141,57 +143,95 @@ public class Ruta {
             }
         });
 
+        // Listar productos
+        app.get("/listarProductos", ctx -> {
+            if(this.login){
+                CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
+                Map<String, Object> modelo = new HashMap<>();
+                modelo.put("cantidadCarrito", (carroCompra.getListaProductos().size()));
+                modelo.put("productos",administracion.getListaProductos());
 
-        /*
-
+                ctx.render("/templates/listasProductos/listarProductos.html",modelo);            }
+            else{
+                ctx.redirect("/listarProductos/login");
+            }
+        });
 
         //login ListarProductos
         app.get("/listarProductos/login", ctx -> {
+            Map<String, Object> modelo = new HashMap<>();
+            modelo.put("accion","/listarProductos/login");
 
-            ctx.result("login");
+            ctx.render("/templates/login/login.html",modelo);
         });
 
         app.post("/listarProductos/login", ctx -> {
             String usuario = ctx.formParam("usuario");
-            String nombre = ctx.formParam("nombre");
             String password = ctx.formParam("password");
 
-            ctx.redirect("/listarProductos");
-        });
-
-        // Listar productos
-        app.get("/listarProductos", ctx -> {
-
-            ctx.result("Listar productos");
-        });
-
-        //Crear Producto
-        app.get("/listarProductos/crearProducto", ctx -> {
-
-            ctx.result("Crear Producto");
-        });
-
-        //Editar Producto
-        app.get("/listarProductos/editarProducto/:nombre/:precio", ctx -> {
-            String nombreProducto = ctx.pathParam("nombreProducto");
-            BigDecimal precioProducto = ctx.pathParam("cantidadProducto",BigDecimal.class).get();
-
-            ctx.result("Editar Producto");
+            if (Usuario.login(usuario,password)){
+                ctx.redirect("/listarProductos");
+                this.login = true;
+            }
+            else{
+                ctx.redirect("/listarProductos/login");
+            }
         });
 
         //Eliminar Producto
-        app.get("/listarProductos/editarProducto/:idProductoMostrador", ctx -> {
-
-            int idProductoMostrador = ctx.pathParam("cantidadProducto",Integer.class).get();
+        app.post("/listarProductos/eliminar/", ctx -> {
+            int idProductoMostrador = ctx.formParam("id",Integer.class).get();
 
             administracion.eliminarProducto(idProductoMostrador);
 
             ctx.redirect("/listarProductos");
         });
 
+        //Editar Producto
+        app.post("/listarProductos/editar/", ctx -> {
+            int idProductoMostrador = ctx.formParam("id",Integer.class).get();
+            ctx.sessionAttribute("idProductoEditar",idProductoMostrador);
 
 
-         */
+            Map<String, Object> modelo = new HashMap<>();
+            modelo.put("titulo","| Editar Producto");
+            modelo.put("titulo2","Editar Producto");
+            modelo.put("accion","/listarProductos/editar/procesar");
+
+
+            ctx.render("/templates/Crear-EditarProducto/Crear-Editar.html",modelo);
+        });
+
+        app.post("/listarProductos/editar/procesar", ctx -> {
+            int idProductoMostrador = ctx.sessionAttribute("idProductoEditar");
+            String nombreProducto = ctx.formParam("nombre");
+            BigDecimal precioProducto =  new BigDecimal(ctx.formParam("precio",Integer.class).get());
+
+            administracion.actualizarProducto(idProductoMostrador,new ProductoMostrador(nombreProducto,precioProducto));
+
+            ctx.redirect("/listarProductos");
+        });
+
+        //Crear Producto
+        app.get("/listarProductos/crearProducto", ctx -> {
+            Map<String, Object> modelo = new HashMap<>();
+            modelo.put("titulo","| Crear Producto");
+            modelo.put("titulo2","Crear Producto");
+            modelo.put("accion","/listarProductos/crear/procesar");
+
+
+            ctx.render("/templates/Crear-EditarProducto/Crear-Editar.html",modelo);
+        });
+
+        app.post("/listarProductos/crear/procesar", ctx -> {
+            String nombreProducto = ctx.formParam("nombre");
+            BigDecimal precioProducto =  new BigDecimal(ctx.formParam("precio",Integer.class).get());
+
+            administracion.agregarProducto(new ProductoMostrador(nombreProducto,precioProducto));
+
+            ctx.redirect("/listarProductos");
+        });
+
 
     }
 

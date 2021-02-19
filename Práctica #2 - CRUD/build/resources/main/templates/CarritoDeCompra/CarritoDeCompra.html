@@ -138,7 +138,7 @@
 
        <br>
        <br>
-    <form method="post" action="/carritoDeCompra/eliminar/" id="form1">
+
         <table class="table table-dark table-hover">
           <thead>
           <tr>
@@ -151,18 +151,20 @@
           </thead>
           <tbody>
             <tr th:each="producto : ${productos}">
-            <th scope="row" th:text="${producto.nombre}" > Ram 64Gb </th>
-            <td th:text="${producto.precio}" >15</td>
-            <td th:text="${producto.cantidad}" >5</td>
-            <td th:text="${producto.cantidad}*${producto.precio}" >5</td>
-            <td><button type="submit" class="btn btn-light" form="form1">Eliminar</button></td>
-            <td><input type="hidden" id = "id" name="id" th:value="${producto.id}"></td>
-            <!--<td><a href="#" class="btn btn-sm btn-secondary fw-bold border-white bg-white"></a></td>-->
+              <form method="post" action="/carritoDeCompra/eliminar/">
+                <th scope="row" th:text="${producto.nombre}" > Ram 64Gb </th>
+                <td th:text="${producto.precio}" >15</td>
+                <td th:text="${producto.cantidad}" >5</td>
+                <td th:text="${producto.cantidad}*${producto.precio}" >5</td>
+                <td><button type="submit" class="btn btn-light">Eliminar</button></td>
+                <td><input type="hidden" id = "id" name="id" th:value="${producto.id}"></td>
+                <!--<td><a href="#" class="btn btn-sm btn-secondary fw-bold border-white bg-white"></a></td>-->
+              </form>
           </tr>
 
           </tbody>
         </table>
-      </form>
+
 
     <br>
     <br>
