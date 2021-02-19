@@ -54,6 +54,13 @@ public class CarroCompra {
         this.listaProductos.remove(encontrarProductoPorId(id));
     }
 
+    public int obtenerCantidadProductos(){
+        int total = 0;
+        for (ProductoCarrito producto:listaProductos) {
+            total = total + producto.getCantidad();
+        }
 
+        return total;
+    }
 
 }

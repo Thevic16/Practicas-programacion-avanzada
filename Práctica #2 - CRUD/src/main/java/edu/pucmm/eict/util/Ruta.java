@@ -41,7 +41,7 @@ public class Ruta {
             CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
             Map<String, Object> modelo = new HashMap<>();
             modelo.put("productos",administracion.getListaProductosDisponibles(carroCompra));
-            modelo.put("cantidadCarrito", (carroCompra.getListaProductos().size()));
+            modelo.put("cantidadCarrito", (carroCompra.obtenerCantidadProductos()));
 
             this.login = false;
 
@@ -70,7 +70,7 @@ public class Ruta {
             CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
             Map<String, Object> modelo = new HashMap<>();
             modelo.put("productos",carroCompra.getListaProductos());
-            modelo.put("cantidadCarrito", (carroCompra.getListaProductos().size()));
+            modelo.put("cantidadCarrito", (carroCompra.obtenerCantidadProductos()));
 
             ctx.render("/templates/CarritoDeCompra/CarritoDeCompra.html",modelo);
         });
@@ -133,7 +133,7 @@ public class Ruta {
             if(this.login){
                 CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
                 Map<String, Object> modelo = new HashMap<>();
-                modelo.put("cantidadCarrito", (carroCompra.getListaProductos().size()));
+                modelo.put("cantidadCarrito", (carroCompra.obtenerCantidadProductos()));
                 modelo.put("ventasProductos", administracion.getListaVentasProductos());
 
                 ctx.render("/templates/ventasRealizadas/ventasRealizadas.html",modelo);
@@ -148,7 +148,7 @@ public class Ruta {
             if(this.login){
                 CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
                 Map<String, Object> modelo = new HashMap<>();
-                modelo.put("cantidadCarrito", (carroCompra.getListaProductos().size()));
+                modelo.put("cantidadCarrito", (carroCompra.obtenerCantidadProductos()));
                 modelo.put("productos",administracion.getListaProductos());
 
                 ctx.render("/templates/listasProductos/listarProductos.html",modelo);            }
