@@ -5,6 +5,7 @@ import io.javalin.plugin.rendering.JavalinRenderer;
 import io.javalin.plugin.rendering.template.JavalinThymeleaf;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.Map;
 public class Ruta {
     private Javalin app;
     private Administracion administracion;
+    private boolean login = false;
 
     public Ruta (Javalin app, Administracion administracion){
         this.app = app;
@@ -86,7 +88,11 @@ public class Ruta {
             String nombreCliente = ctx.formParam("nombreCliente");
             CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
 
-            VentasProductos ventasProductos = new VentasProductos(new Date(),nombreCliente,carroCompra.getListaProductos());
+            String pattern = "dd-MM-yyyy";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+            VentasProductos ventasProductos = new VentasProductos(simpleDateFormat.format(new Date()),nombreCliente,carroCompra.getListaProductos());
+            administracion.agregarVentasProductos(ventasProductos);
 
             ctx.sessionAttribute("carroCompra", null); // Limpiando el carrito de compras
 
@@ -113,6 +119,7 @@ public class Ruta {
 
             if (Usuario.login(usuario,password)){
                 ctx.redirect("/ventasRealizadas");
+                this.login = true;
             }
             else{
                 ctx.redirect("/ventasRealizadas/login");
@@ -121,8 +128,17 @@ public class Ruta {
 
         //Ventas Realizadas
         app.get("/ventasRealizadas", ctx -> {
+            if(this.login){
+                CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
+                Map<String, Object> modelo = new HashMap<>();
+                modelo.put("cantidadCarrito", (carroCompra.getListaProductos().size()));
+                modelo.put("ventasProductos", administracion.getListaVentasProductos());
 
-            ctx.render("/templates/ventasRealizadas/ventasRealizadas.html");
+                ctx.render("/templates/ventasRealizadas/ventasRealizadas.html",modelo);
+            }
+            else{
+                ctx.redirect("/ventasRealizadas/login");
+            }
         });
 
 

@@ -1,17 +1,30 @@
 package edu.pucmm.eict.util;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
 public class VentasProductos {
     private long id;
-    private Date fechaCompra;
+    private String fechaCompra;
     private String nombreCliente;
     private List<ProductoCarrito> listaProductos;
+    private double total;
+
+    public double getTotal() {
+        double total = 0;
+
+        for (ProductoCarrito producto:listaProductos) {
+            total = total + producto.getPrecio().doubleValue()*producto.getCantidad();
+        }
+        this.total = total;
+
+        return this.total;
+    }
 
     private static long cont =0;
 
-    public VentasProductos(Date fechaCompra, String nombreCliente, List<ProductoCarrito> listaProductos) {
+    public VentasProductos(String fechaCompra, String nombreCliente, List<ProductoCarrito> listaProductos) {
         this.id = cont++;
         this.fechaCompra = fechaCompra;
         this.nombreCliente = nombreCliente;
@@ -26,11 +39,11 @@ public class VentasProductos {
         this.id = id;
     }
 
-    public Date getFechaCompra() {
+    public String getFechaCompra() {
         return fechaCompra;
     }
 
-    public void setFechaCompra(Date fechaCompra) {
+    public void setFechaCompra(String fechaCompra) {
         this.fechaCompra = fechaCompra;
     }
 

@@ -111,50 +111,46 @@
         <a class="nav-link" href="/index">Comprar</a>
         <a class="nav-link active" href="#" aria-current="page" >Ventas Realizadas</a>
         <a class="nav-link" href="/listarProductos/login">Administrar Productos</a>
-        <a class="nav-link" href="/carritoDeCompra">Carrito (0)</a>
+        <a class="nav-link" href="/carritoDeCompra" th:text="'Carrito('+${cantidadCarrito}+')'">Carrito (0)</a>
       </nav>
       <br>
       <br>
-      <h3 class="float-md-start mb-0">Ventas Realizadas</h3>
+      <h3 class="float-md-start mb-0">Listado Ventas Realizadas</h3>
     </div>
   </header>
 
   <main class="px-3">
 
-    <table class="table table-dark table-hover">
+    <table class="table table-dark table-hover" th:each="ventaProductos : ${ventasProductos}">
       <thead>
       <tr>
-        <th scope="row" colspan="4">Nombre del cliente  - XX-XX-XXXX</th>
+        <th scope="row" colspan="4" th:text="${ventaProductos.nombreCliente}+'-'+${ventaProductos.fechaCompra}"> </th>
       <tr>
 
       <tr>
         <th scope="col">Producto</th>
         <th scope="col">Precio(RD$)</th>
         <th scope="col">Cantidad</th>
-        <th scope="col">Acción</th>
+        <th scope="col">Subtotal</th>
       </tr>
       </thead>
 
       <tbody>
-      <tr>
-      <!--
-        <tr th:each="producto : ${productos}">
+      <tr th:each="producto : ${ventaProductos.listaProductos}">
         <th scope="row" th:text="${producto.nombre}" > Ram 64Gb </th>
-        <td th:text="${producto.precio}" >15</td>
-        <td><input type="number" name="cantidad"></td>
-        <td><a href="#" class="btn btn-sm btn-secondary fw-bold border-white bg-white">Agregar</a></td> -->
-
-        <th scope="row"> Ram 64Gb </th>
-        <td>15</td>
-        <td><input type="number" name="cantidad"></td>
-        <td><a href="#" class="btn btn-sm btn-secondary fw-bold border-white bg-white">Agregar</a></td>
+        <td th:text="${producto.precio}">15</td>
+        <td th:text="${producto.cantidad}">2</td>
+        <td th:text="${producto.cantidad}*${producto.precio}">50</td>
       </tr>
 
+
       <tr>
-        <th scope="row" colspan="4">Total: </th>
+        <th scope="row" colspan="4" th:text="'Total: '+${ventaProductos.total}">Total: </th>
       <tr>
 
       </tbody>
+      <br>
+      <br>
     </table>
 
   </main>

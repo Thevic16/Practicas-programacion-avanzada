@@ -5,12 +5,12 @@ import java.util.List;
 
 public class Administracion {
     private List<ProductoMostrador> listaProductos;
-    private List<VentasProductos> ventasProductos;
+    private List<VentasProductos> listaVentasProductos;
     private List<Usuario> usuarios;
 
     public Administracion() {
         this.listaProductos = new ArrayList<ProductoMostrador>();
-        this.ventasProductos = new ArrayList<VentasProductos>();
+        this.listaVentasProductos = new ArrayList<VentasProductos>();
         this.usuarios = new ArrayList<Usuario>();
     }
 
@@ -34,12 +34,16 @@ public class Administracion {
         this.listaProductos = listaProductos;
     }
 
-    public List<VentasProductos> getVentasProductos() {
-        return ventasProductos;
+    public List<VentasProductos> getListaVentasProductos() {
+        return listaVentasProductos;
     }
 
     public void setVentasProductos(List<VentasProductos> ventasProductos) {
-        this.ventasProductos = ventasProductos;
+        this.listaVentasProductos = ventasProductos;
+    }
+
+    public void agregarVentasProductos(VentasProductos Ventasproducto) {
+        this.listaVentasProductos.add(Ventasproducto);
     }
 
     public List<Usuario> getUsuarios() {

@@ -32,6 +32,8 @@ public class Main {
         administracion.agregarProducto(producto2);
         administracion.agregarProducto(producto3);
 
+        //administracion.
+
 
         new Ruta(app,administracion).ejecutarRutas();
     }
