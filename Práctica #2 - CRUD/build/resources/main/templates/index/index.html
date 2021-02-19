@@ -135,7 +135,7 @@
             <form method="post" action="/index/agregar/">
               <th scope="row" th:text="${producto.nombre}" > Ram 64Gb </th>
               <td th:text="${producto.precio}" >15</td>
-              <td><input type="number" name="cantidad"></td>
+              <td><input type="number" name="cantidad" required></td>
               <td><button type="submit" class="btn btn-light">Agregar</button></td>
               <td><input type="hidden" id = "id" name="id" th:value="${producto.id}"></td>
             </form>
