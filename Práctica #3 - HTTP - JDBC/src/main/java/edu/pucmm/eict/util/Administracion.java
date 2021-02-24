@@ -54,6 +54,11 @@ public class Administracion {
         this.usuarios = usuarios;
     }
 
+    public void agregarUsuario(Usuario usuario) {
+
+        this.usuarios.add(usuario);
+    }
+
     public void agregarProducto(ProductoMostrador producto) {
         this.listaProductos.add(producto);
     }
@@ -79,6 +84,39 @@ public class Administracion {
             i++;
         }
         return producto;
+    }
+
+    public boolean login(String usuarioCuenta, String password){
+        boolean login = false;
+
+        if(usuarioCuenta.equals("admin") && password.equals("admin") ){
+            login = true;
+        }
+        else{
+            Usuario usuario = encontrarUsuarioPorUsuario(usuarioCuenta);
+            if(usuario != null){
+                if(usuarioCuenta.equals(usuario.getUsuario()) && password.equals(usuario.getPassword()) ){
+                    login = true;
+                }
+            }
+        }
+
+        return login;
+    }
+
+    public Usuario encontrarUsuarioPorUsuario(String usuarioCuenta){
+        Usuario usuario = null;
+        boolean encontrado = false;
+        int i = 0;
+
+        while (!encontrado && i < usuarios.size()){
+            if(usuarios.get(i).getUsuario().equals(usuarioCuenta)){
+                encontrado = true;
+                usuario = usuarios.get(i);
+            }
+            i++;
+        }
+        return usuario;
     }
 
 }

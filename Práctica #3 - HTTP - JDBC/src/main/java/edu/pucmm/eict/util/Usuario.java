@@ -35,12 +35,4 @@ public class Usuario {
         this.password = password;
     }
 
-    public static boolean login(String usuario, String password){
-        boolean login = false;
-
-        if(usuario.equals("admin") && password.equals("admin") ){
-            login = true;
-        }
-        return login;
-    }
 }

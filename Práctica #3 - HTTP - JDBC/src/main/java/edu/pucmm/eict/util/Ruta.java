@@ -119,7 +119,7 @@ public class Ruta {
             String usuario = ctx.formParam("usuario");
             String password = ctx.formParam("password");
 
-            if (Usuario.login(usuario,password)){
+            if (administracion.login(usuario,password)){
                 ctx.redirect("/ventasRealizadas");
                 this.login = true;
             }
@@ -169,7 +169,7 @@ public class Ruta {
             String usuario = ctx.formParam("usuario");
             String password = ctx.formParam("password");
 
-            if (Usuario.login(usuario,password)){
+            if (administracion.login(usuario,password)){
                 ctx.redirect("/listarProductos");
                 this.login = true;
             }
@@ -232,6 +232,30 @@ public class Ruta {
             ctx.redirect("/listarProductos");
         });
 
+        //login ListarProductos
+        app.get("/login/crearCuenta", ctx -> {
+            Map<String, Object> modelo = new HashMap<>();
+            modelo.put("accion","/login/crearCuenta");
+
+            ctx.render("/templates/crearCuenta/crearCuenta.html",modelo);
+        });
+
+        app.post("/login/crearCuenta", ctx -> {
+            String usuario = ctx.formParam("usuario");
+            String nombre = ctx.formParam("nombre");
+            String password = ctx.formParam("password");
+            String confirmacion = ctx.formParam("confirmacion");
+
+            if(password.equals(confirmacion)){
+                administracion.agregarUsuario(new Usuario(usuario,nombre,password));
+
+                ctx.redirect("/index");
+            }
+            else{
+                ctx.redirect("/login/crearCuenta");
+            }
+
+        });
 
     }
 
