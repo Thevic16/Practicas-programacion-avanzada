@@ -1,7 +1,15 @@
 package edu.pucmm.eict.util;
 
+import edu.pucmm.eict.db.DataBaseServices;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Administracion {
     private List<ProductoMostrador> listaProductos;
@@ -21,8 +29,8 @@ public class Administracion {
     public List<ProductoMostrador> getListaProductosDisponibles(CarroCompra carroCompra) {
         List<ProductoMostrador> listaProductosDisponibles = new ArrayList<ProductoMostrador>();
 
-        for (ProductoMostrador productoMostrador:listaProductos) {
-            if(carroCompra.encontrarProductoPorId(productoMostrador.getId()) == null){
+        for (ProductoMostrador productoMostrador : listaProductos) {
+            if (carroCompra.encontrarProductoPorId(productoMostrador.getId()) == null) {
                 listaProductosDisponibles.add(productoMostrador);
             }
         }
@@ -46,18 +54,6 @@ public class Administracion {
         this.listaVentasProductos.add(Ventasproducto);
     }
 
-    public List<Usuario> getUsuarios() {
-        return usuarios;
-    }
-
-    public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
-    }
-
-    public void agregarUsuario(Usuario usuario) {
-
-        this.usuarios.add(usuario);
-    }
 
     public void agregarProducto(ProductoMostrador producto) {
         this.listaProductos.add(producto);
@@ -67,17 +63,17 @@ public class Administracion {
         this.listaProductos.remove(encontrarProductoPorId(id));
     }
 
-    public void actualizarProducto(int idProductoAnterior,ProductoMostrador productoActualizado) {
-        this.listaProductos.set(listaProductos.indexOf(encontrarProductoPorId(idProductoAnterior)),productoActualizado);
+    public void actualizarProducto(int idProductoAnterior, ProductoMostrador productoActualizado) {
+        this.listaProductos.set(listaProductos.indexOf(encontrarProductoPorId(idProductoAnterior)), productoActualizado);
     }
 
-    public ProductoMostrador encontrarProductoPorId(int id){
+    public ProductoMostrador encontrarProductoPorId(int id) {
         ProductoMostrador producto = null;
         boolean encontrado = false;
         int i = 0;
 
-        while (!encontrado && i < listaProductos.size()){
-            if(listaProductos.get(i).getId() == id){
+        while (!encontrado && i < listaProductos.size()) {
+            if (listaProductos.get(i).getId() == id) {
                 encontrado = true;
                 producto = listaProductos.get(i);
             }
@@ -86,16 +82,91 @@ public class Administracion {
         return producto;
     }
 
-    public boolean login(String usuarioCuenta, String password){
+    //Usuario
+    public List<Usuario> getUsuarios() {
+        Usuario usuario = null;
+        this.usuarios.clear();
+
+        Connection con = null;
+        try {
+            //utilizando los comodines (?)...
+            String query = "select * from Usuario";
+            con = DataBaseServices.getInstancia().getConexion();
+            //
+            PreparedStatement prepareStatement = con.prepareStatement(query);
+            //Antes de ejecutar seteo los parametros.
+            ResultSet rs = prepareStatement.executeQuery();
+            while (rs.next()) {
+                usuario = new Usuario();
+                usuario.setUsuario(rs.getString("usuario"));
+                usuario.setNombre(rs.getString("nombre"));
+                usuario.setPassword(rs.getString("password"));
+
+                this.usuarios.add(usuario);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Exception thrown  :" + ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                System.out.println("Exception thrown  :" + ex);
+            }
+        }
+
+        return usuarios;
+    }
+
+    public void setUsuarios(List<Usuario> usuarios) {
+
+        for (Usuario usuario:usuarios) {
+            agregarUsuario(usuario);
+        }
+
+        //this.usuarios = usuarios;
+    }
+
+    public void agregarUsuario(Usuario usuario) {
+
+        Connection con = null;
+        try {
+
+            String query = "insert into Usuario(usuario, nombre, password) values(?,?,?)";
+            con = DataBaseServices.getInstancia().getConexion();
+            //
+            PreparedStatement prepareStatement = con.prepareStatement(query);
+            //Antes de ejecutar seteo los parametros.
+            prepareStatement.setString(1, usuario.getUsuario());
+            prepareStatement.setString(2, usuario.getNombre());
+            prepareStatement.setString(3, usuario.getPassword());
+
+
+            prepareStatement.executeUpdate();
+
+
+        } catch (SQLException ex) {
+            System.out.println("Exception thrown  :" + ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                System.out.println("Exception thrown  :" + ex);
+            }
+        }
+
+        //this.usuarios.add(usuario);
+    }
+
+    public boolean login(String usuarioCuenta, String password) {
         boolean login = false;
 
-        if(usuarioCuenta.equals("admin") && password.equals("admin") ){
+        if (usuarioCuenta.equals("admin") && password.equals("admin")) {
             login = true;
-        }
-        else{
+        } else {
             Usuario usuario = encontrarUsuarioPorUsuario(usuarioCuenta);
-            if(usuario != null){
-                if(usuarioCuenta.equals(usuario.getUsuario()) && password.equals(usuario.getPassword()) ){
+            if (usuario != null) {
+                if (usuarioCuenta.equals(usuario.getUsuario()) && password.equals(usuario.getPassword())) {
                     login = true;
                 }
             }
@@ -104,13 +175,43 @@ public class Administracion {
         return login;
     }
 
-    public Usuario encontrarUsuarioPorUsuario(String usuarioCuenta){
+    public Usuario encontrarUsuarioPorUsuario(String usuarioCuenta) {
         Usuario usuario = null;
         boolean encontrado = false;
         int i = 0;
 
-        while (!encontrado && i < usuarios.size()){
-            if(usuarios.get(i).getUsuario().equals(usuarioCuenta)){
+        this.usuarios.clear();
+
+        Connection con = null;
+        try {
+            //utilizando los comodines (?)...
+            String query = "select * from Usuario";
+            con = DataBaseServices.getInstancia().getConexion();
+            //
+            PreparedStatement prepareStatement = con.prepareStatement(query);
+            //Antes de ejecutar seteo los parametros.
+            ResultSet rs = prepareStatement.executeQuery();
+            while (rs.next()) {
+                usuario = new Usuario();
+                usuario.setUsuario(rs.getString("usuario"));
+                usuario.setNombre(rs.getString("nombre"));
+                usuario.setPassword(rs.getString("password"));
+
+                this.usuarios.add(usuario);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Exception thrown  :" + ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                System.out.println("Exception thrown  :" + ex);
+            }
+        }
+
+        while (!encontrado && i < usuarios.size()) {
+            if (usuarios.get(i).getUsuario().equals(usuarioCuenta)) {
                 encontrado = true;
                 usuario = usuarios.get(i);
             }
@@ -118,5 +219,7 @@ public class Administracion {
         }
         return usuario;
     }
+
+
 
 }
