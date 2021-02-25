@@ -22,14 +22,47 @@ public class Administracion {
         this.usuarios = new ArrayList<Usuario>();
     }
 
+    //producto
     public List<ProductoMostrador> getListaProductos() {
+        this.listaProductos.clear();
+        ProductoMostrador producto = null;
+
+
+        Connection con = null;
+        try {
+            //utilizando los comodines (?)...
+            String query = "select * from PRODUCTOMOSTRADOR ";
+            con = DataBaseServices.getInstancia().getConexion();
+            //
+            PreparedStatement prepareStatement = con.prepareStatement(query);
+            //Antes de ejecutar seteo los parametros.
+            ResultSet rs = prepareStatement.executeQuery();
+            while (rs.next()) {
+                producto = new ProductoMostrador();
+                producto.setId(rs.getInt("id"));
+                producto.setNombre(rs.getString("nombre"));
+                producto.setPrecio(rs.getBigDecimal("precio"));
+
+                this.listaProductos.add(producto);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Exception thrown  :" + ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                System.out.println("Exception thrown  :" + ex);
+            }
+        }
+
         return listaProductos;
     }
 
     public List<ProductoMostrador> getListaProductosDisponibles(CarroCompra carroCompra) {
         List<ProductoMostrador> listaProductosDisponibles = new ArrayList<ProductoMostrador>();
 
-        for (ProductoMostrador productoMostrador : listaProductos) {
+        for (ProductoMostrador productoMostrador : getListaProductos()) {
             if (carroCompra.encontrarProductoPorId(productoMostrador.getId()) == null) {
                 listaProductosDisponibles.add(productoMostrador);
             }
@@ -39,32 +72,110 @@ public class Administracion {
     }
 
     public void setListaProductos(List<ProductoMostrador> listaProductos) {
-        this.listaProductos = listaProductos;
-    }
 
-    public List<VentasProductos> getListaVentasProductos() {
-        return listaVentasProductos;
-    }
+        this.listaProductos.clear();
 
-    public void setVentasProductos(List<VentasProductos> ventasProductos) {
-        this.listaVentasProductos = ventasProductos;
-    }
+        for (ProductoMostrador producto:listaProductos) {
+            agregarProducto(producto);
+        }
 
-    public void agregarVentasProductos(VentasProductos Ventasproducto) {
-        this.listaVentasProductos.add(Ventasproducto);
+        //this.listaProductos = listaProductos;
     }
-
 
     public void agregarProducto(ProductoMostrador producto) {
-        this.listaProductos.add(producto);
+
+        Connection con = null;
+        try {
+
+            String query = "insert into PRODUCTOMOSTRADOR(id, nombre, precio) values(?,?,?)";
+            con = DataBaseServices.getInstancia().getConexion();
+            //
+            PreparedStatement prepareStatement = con.prepareStatement(query);
+            //Antes de ejecutar seteo los parametros.
+            prepareStatement.setInt(1, producto.getId());
+            prepareStatement.setString(2, producto.getNombre());
+            prepareStatement.setBigDecimal(3, producto.getPrecio());
+
+
+            prepareStatement.executeUpdate();
+
+
+        } catch (SQLException ex) {
+            System.out.println("Exception thrown  :" + ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                System.out.println("Exception thrown  :" + ex);
+            }
+        }
+
+        //this.listaProductos.add(producto);
     }
 
     public void eliminarProducto(int id) {
-        this.listaProductos.remove(encontrarProductoPorId(id));
+        ProductoMostrador producto = encontrarProductoPorId(id);
+
+        Connection con = null;
+        try {
+
+            String query = "delete PRODUCTOMOSTRADOR where id=? and nombre =? and precio=?";
+            con = DataBaseServices.getInstancia().getConexion();
+            //
+            PreparedStatement prepareStatement = con.prepareStatement(query);
+            //Antes de ejecutar seteo los parametros.
+            prepareStatement.setInt(1, producto.getId());
+            prepareStatement.setString(2, producto.getNombre());
+            prepareStatement.setBigDecimal(3, producto.getPrecio());
+
+
+            prepareStatement.executeUpdate();
+
+
+        } catch (SQLException ex) {
+            System.out.println("Exception thrown  :" + ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                System.out.println("Exception thrown  :" + ex);
+            }
+        }
+
+        //this.listaProductos.remove(encontrarProductoPorId(id));
     }
 
     public void actualizarProducto(int idProductoAnterior, ProductoMostrador productoActualizado) {
-        this.listaProductos.set(listaProductos.indexOf(encontrarProductoPorId(idProductoAnterior)), productoActualizado);
+        ProductoMostrador productoAnterior = encontrarProductoPorId(idProductoAnterior);
+
+        Connection con = null;
+        try {
+
+            String query = "update PRODUCTOMOSTRADOR set id =?, nombre=?, precio=? where id=? ";
+            con = DataBaseServices.getInstancia().getConexion();
+            //
+            PreparedStatement prepareStatement = con.prepareStatement(query);
+            //Antes de ejecutar seteo los parametros.
+            prepareStatement.setInt(1, productoActualizado.getId());
+            prepareStatement.setString(2, productoActualizado.getNombre());
+            prepareStatement.setBigDecimal(3, productoActualizado.getPrecio());
+            prepareStatement.setInt(4, productoAnterior.getId());
+
+
+            prepareStatement.executeUpdate();
+
+
+        } catch (SQLException ex) {
+            System.out.println("Exception thrown  :" + ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                System.out.println("Exception thrown  :" + ex);
+            }
+        }
+
+        //this.listaProductos.set(listaProductos.indexOf(encontrarProductoPorId(idProductoAnterior)), productoActualizado);
     }
 
     public ProductoMostrador encontrarProductoPorId(int id) {
@@ -72,15 +183,94 @@ public class Administracion {
         boolean encontrado = false;
         int i = 0;
 
-        while (!encontrado && i < listaProductos.size()) {
-            if (listaProductos.get(i).getId() == id) {
+        while (!encontrado && i < getListaProductos().size()) {
+            if (getListaProductos().get(i).getId() == id) {
                 encontrado = true;
-                producto = listaProductos.get(i);
+                producto = getListaProductos().get(i);
             }
             i++;
         }
         return producto;
     }
+
+    //Ventas
+    public List<VentasProductos> getListaVentasProductos() {
+
+        this.listaProductos.clear();
+        VentasProductos ventasProductos = null;
+
+
+        Connection con = null;
+        try {
+            String query = "select * from VENTASPRODUCTO ";
+            con = DataBaseServices.getInstancia().getConexion();
+            //
+            PreparedStatement prepareStatement = con.prepareStatement(query);
+            //Antes de ejecutar seteo los parametros.
+            ResultSet rs = prepareStatement.executeQuery();
+            while (rs.next()) {
+                ventasProductos = new VentasProductos();
+                ventasProductos.setId(rs.getInt("id"));
+                ventasProductos.setFechaCompra(rs.getString("date"));
+                ventasProductos.setNombreCliente(rs.getString("nombreCliente"));
+
+                this.listaVentasProductos.add(ventasProductos);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Exception thrown  :" + ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                System.out.println("Exception thrown  :" + ex);
+            }
+        }
+
+        return listaVentasProductos;
+    }
+
+    public void setVentasProductos(List<VentasProductos> ventasProductos) {
+
+        this.listaVentasProductos.clear();
+
+        for (VentasProductos venta:ventasProductos) {
+            agregarVentasProductos(venta);
+        }
+
+        //this.listaVentasProductos = ventasProductos;
+    }
+
+    public void agregarVentasProductos(VentasProductos Ventasproducto) {
+        Connection con = null;
+        try {
+
+            String query = "insert into VENTASPRODUCTO(id, date, nombreCliente) values(?,?,?)";
+            con = DataBaseServices.getInstancia().getConexion();
+            //
+            PreparedStatement prepareStatement = con.prepareStatement(query);
+            //Antes de ejecutar seteo los parametros.
+            prepareStatement.setLong(1, Ventasproducto.getId());
+            prepareStatement.setString(2, Ventasproducto.getFechaCompra());
+            prepareStatement.setString(3, Ventasproducto.getNombreCliente());
+
+
+            prepareStatement.executeUpdate();
+
+
+        } catch (SQLException ex) {
+            System.out.println("Exception thrown  :" + ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                System.out.println("Exception thrown  :" + ex);
+            }
+        }
+
+        //this.listaVentasProductos.add(Ventasproducto);
+    }
+
 
     //Usuario
     public List<Usuario> getUsuarios() {
@@ -119,6 +309,8 @@ public class Administracion {
     }
 
     public void setUsuarios(List<Usuario> usuarios) {
+
+        this.usuarios.clear();
 
         for (Usuario usuario:usuarios) {
             agregarUsuario(usuario);
