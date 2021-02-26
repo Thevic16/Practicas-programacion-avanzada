@@ -3,6 +3,7 @@ package edu.pucmm.eict.util;
 import io.javalin.Javalin;
 import io.javalin.plugin.rendering.JavalinRenderer;
 import io.javalin.plugin.rendering.template.JavalinThymeleaf;
+import org.jasypt.util.text.AES256TextEncryptor;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -122,7 +123,9 @@ public class Ruta {
 
             //Recordar al usuario - Asignar cookie.
             if(recuerdame != null){
-                ctx.cookie("Recuerdame",usuario,604800);
+                AES256TextEncryptor textEncryptor = new AES256TextEncryptor();
+                textEncryptor.setPassword("myEncryptionPassword");
+                ctx.cookie("Recuerdame",textEncryptor.encrypt(usuario),604800);
                 //System.out.println("Cookie:"+ctx.cookie("Recuerdame"));
             }
 
@@ -181,7 +184,9 @@ public class Ruta {
 
             //Recordar al usuario - Asignar cookie.
             if(recuerdame != null){
-                ctx.cookie("Recuerdame",usuario,604800);
+                AES256TextEncryptor textEncryptor = new AES256TextEncryptor();
+                textEncryptor.setPassword("myEncryptionPassword");
+                ctx.cookie("Recuerdame",textEncryptor.encrypt(usuario),604800);
                 //System.out.println("Cookie:"+ctx.cookie("Recuerdame"));
             }
 
