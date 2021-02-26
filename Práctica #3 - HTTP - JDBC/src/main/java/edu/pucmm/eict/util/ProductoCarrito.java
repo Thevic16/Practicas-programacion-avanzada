@@ -13,6 +13,11 @@ public class ProductoCarrito extends Producto{
         this.id = id;
     }
 
+    public ProductoCarrito() {
+        super();
+    }
+
+
     public int getCantidad() {
         return cantidad;
     }

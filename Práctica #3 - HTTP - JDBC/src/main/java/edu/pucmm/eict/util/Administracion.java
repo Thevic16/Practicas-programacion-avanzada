@@ -196,7 +196,7 @@ public class Administracion {
     //Ventas
     public List<VentasProductos> getListaVentasProductos() {
 
-        this.listaProductos.clear();
+        this.listaVentasProductos.clear();
         VentasProductos ventasProductos = null;
 
 
@@ -211,8 +211,12 @@ public class Administracion {
             while (rs.next()) {
                 ventasProductos = new VentasProductos();
                 ventasProductos.setId(rs.getInt("id"));
-                ventasProductos.setFechaCompra(rs.getString("date"));
+                ventasProductos.setFechaCompra(rs.getString("fecha"));
                 ventasProductos.setNombreCliente(rs.getString("nombreCliente"));
+
+                List<ProductoCarrito> ListaProductos = getListaProductosVentasProductos(ventasProductos);
+
+                ventasProductos.setListaProductos(ListaProductos);
 
                 this.listaVentasProductos.add(ventasProductos);
             }
@@ -230,6 +234,44 @@ public class Administracion {
         return listaVentasProductos;
     }
 
+    public List<ProductoCarrito>  getListaProductosVentasProductos(VentasProductos ventasProducto) {
+
+        ProductoCarrito producto = null;
+        List<ProductoCarrito> ListaProductos = new ArrayList<ProductoCarrito>();
+
+
+        Connection con = null;
+        try {
+            String query = "select * from LISTAPRODUCTOCARRITO where idVentasProductos ="+ventasProducto.getId();
+            con = DataBaseServices.getInstancia().getConexion();
+            //
+            PreparedStatement prepareStatement = con.prepareStatement(query);
+            //Antes de ejecutar seteo los parametros.
+            ResultSet rs = prepareStatement.executeQuery();
+            while (rs.next()) {
+                producto = new ProductoCarrito();
+                producto.setId(rs.getInt("id"));
+                producto.setNombre(rs.getString("nombre"));
+                producto.setCantidad(rs.getInt("cantidad"));
+                producto.setPrecio(rs.getBigDecimal("precio"));
+
+
+                ListaProductos.add(producto);
+            }
+
+        } catch (SQLException ex) {
+            System.out.println("Exception thrown  :" + ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                System.out.println("Exception thrown  :" + ex);
+            }
+        }
+
+        return ListaProductos;
+    }
+
     public void setVentasProductos(List<VentasProductos> ventasProductos) {
 
         this.listaVentasProductos.clear();
@@ -241,21 +283,23 @@ public class Administracion {
         //this.listaVentasProductos = ventasProductos;
     }
 
-    public void agregarVentasProductos(VentasProductos Ventasproducto) {
+    public void agregarVentasProductos(VentasProductos ventasproducto) {
         Connection con = null;
         try {
 
-            String query = "insert into VENTASPRODUCTO(id, date, nombreCliente) values(?,?,?)";
+            String query = "insert into VENTASPRODUCTO(id, fecha, nombreCliente) values(?,?,?)";
             con = DataBaseServices.getInstancia().getConexion();
             //
             PreparedStatement prepareStatement = con.prepareStatement(query);
             //Antes de ejecutar seteo los parametros.
-            prepareStatement.setLong(1, Ventasproducto.getId());
-            prepareStatement.setString(2, Ventasproducto.getFechaCompra());
-            prepareStatement.setString(3, Ventasproducto.getNombreCliente());
-
-
+            prepareStatement.setLong(1, ventasproducto.getId());
+            prepareStatement.setString(2, ventasproducto.getFechaCompra());
+            prepareStatement.setString(3, ventasproducto.getNombreCliente());
             prepareStatement.executeUpdate();
+
+            for (ProductoCarrito producto: ventasproducto.getListaProductos()) {
+                agregarProductoVenta( producto, ventasproducto );
+            }
 
 
         } catch (SQLException ex) {
@@ -271,6 +315,38 @@ public class Administracion {
         //this.listaVentasProductos.add(Ventasproducto);
     }
 
+    public void agregarProductoVenta(ProductoCarrito producto,VentasProductos Ventasproducto ) {
+
+        Connection con = null;
+        try {
+
+            String query = "insert into ListaProductoCarrito(id,cantidad ,nombre, precio,idVentasProductos) values(?,?,?,?,?)";
+            con = DataBaseServices.getInstancia().getConexion();
+            //
+            PreparedStatement prepareStatement = con.prepareStatement(query);
+            //Antes de ejecutar seteo los parametros.
+            prepareStatement.setInt(1, producto.getId());
+            prepareStatement.setInt(2, producto.getCantidad());
+            prepareStatement.setString(3, producto.getNombre());
+            prepareStatement.setBigDecimal(4, producto.getPrecio());
+            prepareStatement.setLong(5, Ventasproducto.getId());
+
+
+            prepareStatement.executeUpdate();
+
+
+        } catch (SQLException ex) {
+            System.out.println("Exception thrown  :" + ex);
+        } finally {
+            try {
+                con.close();
+            } catch (SQLException ex) {
+                System.out.println("Exception thrown  :" + ex);
+            }
+        }
+
+        //this.listaProductos.add(producto);
+    }
 
     //Usuario
     public List<Usuario> getUsuarios() {

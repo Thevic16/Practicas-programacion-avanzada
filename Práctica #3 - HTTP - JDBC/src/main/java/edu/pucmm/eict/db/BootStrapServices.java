@@ -79,11 +79,12 @@ public class BootStrapServices {
     public static void crearTablaListaProductoCar() throws  SQLException{
         String sql = "CREATE TABLE IF NOT EXISTS ListaProductoCarrito\n" +
                 "(\n" +
-                "  id INTEGER PRIMARY KEY NOT NULL,\n" +
+                "  id INTEGER NOT NULL,\n" +
                 "  cantidad INTEGER NOT NULL,\n" +
                 "  nombre VARCHAR(100) NOT NULL,\n" +
                 "  precio FLOAT NOT NULL,\n" +
-                "  idVentasProductos INTEGER NOT NULL\n" +");";
+                "  idVentasProductos INTEGER NOT NULL,\n" +
+                " PRIMARY KEY (id, idVentasProductos)\n" +");";
 
         Connection con = DataBaseServices.getInstancia().getConexion();
         Statement statement = con.createStatement();
@@ -120,7 +121,7 @@ public class BootStrapServices {
         String sql = "CREATE TABLE IF NOT EXISTS Ventasproducto\n" +
                 "(\n" +
                 "  id INTEGER PRIMARY KEY NOT NULL,\n" +
-                "  date DATE NOT NULL,\n" +
+                "  fecha VARCHAR(100) NOT NULL,\n" +
                 "  nombreCliente VARCHAR(100) NOT NULL\n" +");";
 
         Connection con = DataBaseServices.getInstancia().getConexion();

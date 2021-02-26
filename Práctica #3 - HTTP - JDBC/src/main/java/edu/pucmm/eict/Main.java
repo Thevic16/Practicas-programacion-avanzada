@@ -37,8 +37,8 @@ public class Main {
 
         BootStrapServices.crearTablaUsuario();
         BootStrapServices.crearTablaProductoMos();
-        BootStrapServices.crearTablaListaProductoCar() ;
         BootStrapServices.crearTablaVentasproducto();
+        BootStrapServices.crearTablaListaProductoCar();
     }
 
 
