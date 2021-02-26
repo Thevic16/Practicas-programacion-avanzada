@@ -93,17 +93,6 @@ public class BootStrapServices {
         con.close();
 
 
-         sql = "ALTER TABLE ListaProductoCarrito\n" +
-                "\n" +
-                "  ADD FOREIGN KEY (id)\n" +
-                "  REFERENCES ProductoMostrador(id)\n"+";";
-
-        con = DataBaseServices.getInstancia().getConexion();
-        statement = con.createStatement();
-        statement.execute(sql);
-        statement.close();
-        con.close();
-
         sql = "ALTER TABLE ListaProductoCarrito\n" +
                 "\n" +
                 "  ADD FOREIGN KEY (idVentasProductos)\n" +

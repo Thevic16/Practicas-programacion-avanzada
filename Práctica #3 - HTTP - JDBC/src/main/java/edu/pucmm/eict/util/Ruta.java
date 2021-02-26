@@ -122,8 +122,8 @@ public class Ruta {
 
             //Recordar al usuario - Asignar cookie.
             if(recuerdame != null){
-                ctx.cookie("Recuerdame","Recuerdame",604800);
-                System.out.println("Cookie:"+ctx.cookie("Recuerdame"));
+                ctx.cookie("Recuerdame",usuario,604800);
+                //System.out.println("Cookie:"+ctx.cookie("Recuerdame"));
             }
 
             if (administracion.login(usuario,password)){
@@ -181,8 +181,8 @@ public class Ruta {
 
             //Recordar al usuario - Asignar cookie.
             if(recuerdame != null){
-                ctx.cookie("Recuerdame","Recuerdame",604800);
-                System.out.println("Cookie:"+ctx.cookie("Recuerdame"));
+                ctx.cookie("Recuerdame",usuario,604800);
+                //System.out.println("Cookie:"+ctx.cookie("Recuerdame"));
             }
 
             if (administracion.login(usuario,password)){
