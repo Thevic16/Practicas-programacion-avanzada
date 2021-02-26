@@ -14,9 +14,9 @@ edu/pucmm/eict/util/ProductoCarrito.java
  edu.pucmm.eict.util.ProductoCarrito
 edu/pucmm/eict/util/CarroCompra.java
  edu.pucmm.eict.util.CarroCompra
-edu/pucmm/eict/util/Ruta.java
- edu.pucmm.eict.util.Ruta
-edu/pucmm/eict/Main.java
- edu.pucmm.eict.Main
 edu/pucmm/eict/db/BootStrapServices.java
  edu.pucmm.eict.db.BootStrapServices
+edu/pucmm/eict/Main.java
+ edu.pucmm.eict.Main
+edu/pucmm/eict/util/Ruta.java
+ edu.pucmm.eict.util.Ruta

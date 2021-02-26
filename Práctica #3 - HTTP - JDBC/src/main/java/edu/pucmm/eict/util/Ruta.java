@@ -118,6 +118,13 @@ public class Ruta {
         app.post("/ventasRealizadas/login", ctx -> {
             String usuario = ctx.formParam("usuario");
             String password = ctx.formParam("password");
+            String recuerdame = ctx.formParam("Recuerdame");
+
+            //Recordar al usuario - Asignar cookie.
+            if(recuerdame != null){
+                ctx.cookie("Recuerdame","Recuerdame",604800);
+                System.out.println("Cookie:"+ctx.cookie("Recuerdame"));
+            }
 
             if (administracion.login(usuario,password)){
                 ctx.redirect("/ventasRealizadas");
@@ -126,11 +133,13 @@ public class Ruta {
             else{
                 ctx.redirect("/ventasRealizadas/login");
             }
+
+
         });
 
         //Ventas Realizadas
         app.get("/ventasRealizadas", ctx -> {
-            if(this.login){
+            if(this.login || ctx.cookie("Recuerdame") != null){
                 CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
                 Map<String, Object> modelo = new HashMap<>();
                 modelo.put("cantidadCarrito", (carroCompra.obtenerCantidadProductos()));
@@ -145,7 +154,7 @@ public class Ruta {
 
         // Listar productos
         app.get("/listarProductos", ctx -> {
-            if(this.login){
+            if(this.login || ctx.cookie("Recuerdame") != null){
                 CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
                 Map<String, Object> modelo = new HashMap<>();
                 modelo.put("cantidadCarrito", (carroCompra.obtenerCantidadProductos()));
@@ -168,6 +177,13 @@ public class Ruta {
         app.post("/listarProductos/login", ctx -> {
             String usuario = ctx.formParam("usuario");
             String password = ctx.formParam("password");
+            String recuerdame = ctx.formParam("Recuerdame");
+
+            //Recordar al usuario - Asignar cookie.
+            if(recuerdame != null){
+                ctx.cookie("Recuerdame","Recuerdame",604800);
+                System.out.println("Cookie:"+ctx.cookie("Recuerdame"));
+            }
 
             if (administracion.login(usuario,password)){
                 ctx.redirect("/listarProductos");
