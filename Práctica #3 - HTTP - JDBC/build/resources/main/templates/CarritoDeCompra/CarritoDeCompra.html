@@ -145,7 +145,7 @@
             <th scope="col">Producto</th>
             <th scope="col">Precio(RD$)</th>
             <th scope="col">Cantidad</th>
-            <th scope="col">Total(RD$)</th>
+            <th scope="col">SubTotal(RD$)</th>
             <th scope="col">Acción</th>
           </tr>
           </thead>
@@ -161,6 +161,11 @@
                 <!--<td><a href="#" class="btn btn-sm btn-secondary fw-bold border-white bg-white"></a></td>-->
               </form>
           </tr>
+
+            <tr>
+              <br>
+              <th scope="row" colspan="4" th:text="'Total(RD$): '+${totalPrecio}">Total: </th>
+            <tr>
 
           </tbody>
         </table>

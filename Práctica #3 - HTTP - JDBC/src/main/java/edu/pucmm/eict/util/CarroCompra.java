@@ -63,4 +63,14 @@ public class CarroCompra {
         return total;
     }
 
+    public double getPrecioTotal() {
+        double total = 0;
+
+        for (ProductoCarrito producto:listaProductos) {
+            total = total + producto.getPrecio().doubleValue()*producto.getCantidad();
+        }
+
+        return total;
+    }
+
 }

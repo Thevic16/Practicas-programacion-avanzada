@@ -72,6 +72,7 @@ public class Ruta {
             Map<String, Object> modelo = new HashMap<>();
             modelo.put("productos",carroCompra.getListaProductos());
             modelo.put("cantidadCarrito", (carroCompra.obtenerCantidadProductos()));
+            modelo.put("totalPrecio",carroCompra.getPrecioTotal());
 
             ctx.render("/templates/CarritoDeCompra/CarritoDeCompra.html",modelo);
         });
