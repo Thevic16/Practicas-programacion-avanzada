@@ -74,6 +74,8 @@ public class Ruta {
             modelo.put("cantidadCarrito", (carroCompra.obtenerCantidadProductos()));
             modelo.put("totalPrecio",carroCompra.getPrecioTotal());
 
+            this.login = false;
+
             ctx.render("/templates/CarritoDeCompra/CarritoDeCompra.html",modelo);
         });
 
@@ -122,17 +124,20 @@ public class Ruta {
             String password = ctx.formParam("password");
             String recuerdame = ctx.formParam("Recuerdame");
 
-            //Recordar al usuario - Asignar cookie.
-            if(recuerdame != null){
-                AES256TextEncryptor textEncryptor = new AES256TextEncryptor();
-                textEncryptor.setPassword("myEncryptionPassword");
-                ctx.cookie("Recuerdame",textEncryptor.encrypt(usuario),604800);
-                //System.out.println("Cookie:"+ctx.cookie("Recuerdame"));
-            }
+
 
             if (administracion.login(usuario,password)){
                 ctx.redirect("/ventasRealizadas");
                 this.login = true;
+
+                //Recordar al usuario - Asignar cookie.
+                if(recuerdame != null){
+                    AES256TextEncryptor textEncryptor = new AES256TextEncryptor();
+                    textEncryptor.setPassword("myEncryptionPassword");
+                    ctx.cookie("Recuerdame",textEncryptor.encrypt(usuario),604800);
+                    //System.out.println("Cookie:"+ctx.cookie("Recuerdame"));
+                }
+
             }
             else{
                 ctx.redirect("/ventasRealizadas/login");
@@ -149,6 +154,8 @@ public class Ruta {
                 modelo.put("cantidadCarrito", (carroCompra.obtenerCantidadProductos()));
                 modelo.put("ventasProductos", administracion.getListaVentasProductos());
 
+                this.login = false;
+
                 ctx.render("/templates/ventasRealizadas/ventasRealizadas.html",modelo);
             }
             else{
@@ -163,6 +170,8 @@ public class Ruta {
                 Map<String, Object> modelo = new HashMap<>();
                 modelo.put("cantidadCarrito", (carroCompra.obtenerCantidadProductos()));
                 modelo.put("productos",administracion.getListaProductos());
+
+                this.login = false;
 
                 ctx.render("/templates/listasProductos/listarProductos.html",modelo);            }
             else{
@@ -183,17 +192,19 @@ public class Ruta {
             String password = ctx.formParam("password");
             String recuerdame = ctx.formParam("Recuerdame");
 
-            //Recordar al usuario - Asignar cookie.
-            if(recuerdame != null){
-                AES256TextEncryptor textEncryptor = new AES256TextEncryptor();
-                textEncryptor.setPassword("myEncryptionPassword");
-                ctx.cookie("Recuerdame",textEncryptor.encrypt(usuario),604800);
-                //System.out.println("Cookie:"+ctx.cookie("Recuerdame"));
-            }
 
             if (administracion.login(usuario,password)){
                 ctx.redirect("/listarProductos");
                 this.login = true;
+
+                //Recordar al usuario - Asignar cookie.
+                if(recuerdame != null){
+                    AES256TextEncryptor textEncryptor = new AES256TextEncryptor();
+                    textEncryptor.setPassword("myEncryptionPassword");
+                    ctx.cookie("Recuerdame",textEncryptor.encrypt(usuario),604800);
+                    //System.out.println("Cookie:"+ctx.cookie("Recuerdame"));
+                }
+
             }
             else{
                 ctx.redirect("/listarProductos/login");
