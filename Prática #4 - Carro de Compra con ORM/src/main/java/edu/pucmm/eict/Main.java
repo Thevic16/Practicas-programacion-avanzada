@@ -1,16 +1,10 @@
 package edu.pucmm.eict;
 
 import edu.pucmm.eict.db.BootStrapServices;
-import edu.pucmm.eict.db.DataBaseServices;
 import edu.pucmm.eict.util.*;
 import io.javalin.Javalin;
-import io.javalin.plugin.rendering.JavalinRenderer;
-import io.javalin.plugin.rendering.template.JavalinThymeleaf;
 
-import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
@@ -30,15 +24,9 @@ public class Main {
 
         //Prueba Crear tablas
         //Iniciando el servicio
-        BootStrapServices.startDb();
+        BootStrapServices.getInstancia().init();
 
-        //Prueba de Conexión.
-        DataBaseServices.getInstancia().testConexion();
 
-        BootStrapServices.crearTablaUsuario();
-        BootStrapServices.crearTablaProductoMos();
-        BootStrapServices.crearTablaVentasproducto();
-        BootStrapServices.crearTablaListaProductoCar();
     }
 
 

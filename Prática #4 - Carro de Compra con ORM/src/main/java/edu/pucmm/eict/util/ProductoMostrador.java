@@ -1,7 +1,5 @@
 package edu.pucmm.eict.util;
 
-import edu.pucmm.eict.db.DataBaseServices;
-
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
