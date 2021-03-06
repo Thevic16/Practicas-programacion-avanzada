@@ -81,4 +81,28 @@ public class Administracion {
         return producto;
     }
 
+    public boolean login(String usuarioCuenta, String password) {
+        boolean login = false;
+
+        if (usuarioCuenta.equals("admin") && password.equals("admin")) {
+            login = true;
+        } else {
+            /*
+            Usuario usuario = encontrarUsuarioPorUsuario(usuarioCuenta);
+            if (usuario != null) {
+                if (usuarioCuenta.equals(usuario.getUsuario()) && password.equals(usuario.getPassword())) {
+                    login = true;
+                }
+            }
+            */
+        }
+
+        return login;
+    }
+
+
+    public void agregarUsuario(Usuario usuario) {
+        //this.usuarios.add(usuario);
+    }
+
 }
