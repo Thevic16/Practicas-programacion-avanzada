@@ -1,11 +1,15 @@
 package edu.pucmm.eict.util;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.math.BigDecimal;
 
+@Entity
 public class ProductoCarrito extends Producto{
-    private int cantidad;
 
+    @Id
     private int id;
+    private int cantidad;
 
     public ProductoCarrito(int id,String nombre, BigDecimal precio, int cantidad) {
         super(nombre, precio);
@@ -16,8 +20,6 @@ public class ProductoCarrito extends Producto{
     public ProductoCarrito() {
         super();
     }
-
-
 
 
     public int getCantidad() {

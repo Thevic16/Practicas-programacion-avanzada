@@ -1,6 +1,13 @@
 package edu.pucmm.eict.util;
 
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public class Usuario {
+
+    @Id
     private String usuario;
     private String nombre;
     private String password;

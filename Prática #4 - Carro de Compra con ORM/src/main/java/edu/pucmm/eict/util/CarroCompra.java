@@ -1,10 +1,17 @@
 package edu.pucmm.eict.util;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class CarroCompra {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //crear el ID de forma automatica
     private long id;
+
+    @OneToMany
     private List<ProductoCarrito> listaProductos;
 
     private static long cont =0;

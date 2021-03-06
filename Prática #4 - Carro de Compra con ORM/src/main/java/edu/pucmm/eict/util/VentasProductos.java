@@ -1,15 +1,22 @@
 package edu.pucmm.eict.util;
 
+import javax.persistence.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+@Entity
 public class VentasProductos {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY) //crear el ID de forma automatica
     private long id;
     private String fechaCompra;
     private String nombreCliente;
+
+    @OneToMany
     private List<ProductoCarrito> listaProductos;
     private double total;
 
@@ -30,31 +37,6 @@ public class VentasProductos {
         this.fechaCompra = fechaCompra;
         this.nombreCliente = nombreCliente;
         this.listaProductos = listaProductos;
-
-        //Buscando en que numero se quedo el ID.
-        Connection con = null;
-        try {
-            //utilizando los comodines (?)...
-            String query = "select id from VentasProducto order by id DESC";
-            con = DataBaseServices.getInstancia().getConexion();
-            //
-            PreparedStatement prepareStatement = con.prepareStatement(query);
-            //Antes de ejecutar seteo los parametros.
-            ResultSet rs = prepareStatement.executeQuery();
-            rs.next();
-            this.id=rs.getInt("id")+1;
-
-
-        } catch (SQLException ex) {
-            System.out.println("Exception thrown  :" + ex);
-        } finally {
-            try {
-                con.close();
-            } catch (SQLException ex) {
-                System.out.println("Exception thrown  :" + ex);
-            }
-        }
-
     }
 
     public VentasProductos() {
