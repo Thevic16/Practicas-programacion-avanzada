@@ -41,7 +41,7 @@ public class Ruta {
         app.get("/index", ctx -> {
             CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
             Map<String, Object> modelo = new HashMap<>();
-            modelo.put("productos",administracion.getListaProductosDisponibles(carroCompra));
+            modelo.put("productos",administracion.getListaProductos());
             modelo.put("cantidadCarrito", (carroCompra.obtenerCantidadProductos()));
 
             this.login = false;

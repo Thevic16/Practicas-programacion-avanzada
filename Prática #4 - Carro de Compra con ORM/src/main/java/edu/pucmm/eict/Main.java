@@ -22,13 +22,12 @@ public class Main {
         app.config.addStaticFiles("/publico");
 
 
-        //new Ruta(app,administracion).ejecutarRutas();
+        new Ruta(app,administracion).ejecutarRutas();
 
         //Prueba Crear tablas
         //Iniciando el servicio
         BootStrapServices.getInstancia().init();
     }
-
 
 }
 

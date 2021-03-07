@@ -17,5 +17,5 @@ public class VentasProductosServices extends GestionDb<VentasProductos>{
         }
         return instancia;
     }
-    
+
 }

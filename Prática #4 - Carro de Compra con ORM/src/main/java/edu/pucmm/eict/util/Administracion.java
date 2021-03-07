@@ -1,5 +1,9 @@
 package edu.pucmm.eict.util;
 
+import edu.pucmm.eict.db.ProductoMostradorServices;
+import edu.pucmm.eict.db.UsuarioServices;
+import edu.pucmm.eict.db.VentasProductosServices;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +12,7 @@ public class Administracion {
     private List<VentasProductos> listaVentasProductos;
     private List<Usuario> usuarios;
 
+
     public Administracion() {
         this.listaProductos = new ArrayList<ProductoMostrador>();
         this.listaVentasProductos = new ArrayList<VentasProductos>();
@@ -15,70 +20,85 @@ public class Administracion {
     }
 
     public List<ProductoMostrador> getListaProductos() {
-        return listaProductos;
-    }
+        List<ProductoMostrador> lista =ProductoMostradorServices.getInstancia().findAll();
 
-    public List<ProductoMostrador> getListaProductosDisponibles(CarroCompra carroCompra) {
-        List<ProductoMostrador> listaProductosDisponibles = new ArrayList<ProductoMostrador>();
-
-        for (ProductoMostrador productoMostrador:listaProductos) {
-            if(carroCompra.encontrarProductoPorId(productoMostrador.getId()) == null){
-                listaProductosDisponibles.add(productoMostrador);
-            }
+        if(lista != null){
+            return lista;
+        }
+        else{
+            return listaProductos;
         }
 
-        return listaProductosDisponibles;
     }
 
     public void setListaProductos(List<ProductoMostrador> listaProductos) {
-        this.listaProductos = listaProductos;
+
+        for (ProductoMostrador producto:listaProductos) {
+            ProductoMostradorServices.getInstancia().crear(producto);
+        }
+
+        //this.listaProductos = listaProductos;
     }
 
     public List<VentasProductos> getListaVentasProductos() {
-        return listaVentasProductos;
+        List<VentasProductos> lista =VentasProductosServices.getInstancia().findAll();
+
+        if(lista != null){
+            return lista;
+        }
+        else{
+            return listaVentasProductos;
+        }
+
     }
 
     public void setVentasProductos(List<VentasProductos> ventasProductos) {
-        this.listaVentasProductos = ventasProductos;
+        for (VentasProductos ventas :ventasProductos) {
+            VentasProductosServices.getInstancia().crear(ventas);
+        }
     }
 
     public void agregarVentasProductos(VentasProductos Ventasproducto) {
-        this.listaVentasProductos.add(Ventasproducto);
+        VentasProductosServices.getInstancia().crear(Ventasproducto);
+        //this.listaVentasProductos.add(Ventasproducto);
     }
 
     public List<Usuario> getUsuarios() {
-        return usuarios;
+
+        List<Usuario> lista = UsuarioServices.getInstancia().findAll();
+
+        if(lista != null){
+            return lista;
+        }
+        else{
+            return usuarios;
+        }
     }
 
     public void setUsuarios(List<Usuario> usuarios) {
-        this.usuarios = usuarios;
+        for (Usuario usuario :usuarios) {
+            UsuarioServices.getInstancia().crear(usuario);
+        }
+        //this.usuarios = usuarios;
     }
 
     public void agregarProducto(ProductoMostrador producto) {
-        this.listaProductos.add(producto);
+        ProductoMostradorServices.getInstancia().crear(producto);
+        //this.listaProductos.add(producto);
     }
 
     public void eliminarProducto(int id) {
-        this.listaProductos.remove(encontrarProductoPorId(id));
+        ProductoMostradorServices.getInstancia().eliminar(ProductoMostradorServices.getInstancia().findProductById(id));
+        //this.listaProductos.remove(encontrarProductoPorId(id));
     }
 
     public void actualizarProducto(int idProductoAnterior,ProductoMostrador productoActualizado) {
-        this.listaProductos.set(listaProductos.indexOf(encontrarProductoPorId(idProductoAnterior)),productoActualizado);
+        ProductoMostradorServices.getInstancia().editar(productoActualizado);
+        //this.listaProductos.set(listaProductos.indexOf(encontrarProductoPorId(idProductoAnterior)),productoActualizado);
     }
 
     public ProductoMostrador encontrarProductoPorId(int id){
-        ProductoMostrador producto = null;
-        boolean encontrado = false;
-        int i = 0;
-
-        while (!encontrado && i < listaProductos.size()){
-            if(listaProductos.get(i).getId() == id){
-                encontrado = true;
-                producto = listaProductos.get(i);
-            }
-            i++;
-        }
-        return producto;
+        return ProductoMostradorServices.getInstancia().findProductById(id);
     }
 
     public boolean login(String usuarioCuenta, String password) {
@@ -87,14 +107,13 @@ public class Administracion {
         if (usuarioCuenta.equals("admin") && password.equals("admin")) {
             login = true;
         } else {
-            /*
-            Usuario usuario = encontrarUsuarioPorUsuario(usuarioCuenta);
+
+            Usuario usuario = UsuarioServices.getInstancia().findUserByUser(usuarioCuenta);
             if (usuario != null) {
                 if (usuarioCuenta.equals(usuario.getUsuario()) && password.equals(usuario.getPassword())) {
                     login = true;
                 }
             }
-            */
         }
 
         return login;
@@ -102,6 +121,7 @@ public class Administracion {
 
 
     public void agregarUsuario(Usuario usuario) {
+        UsuarioServices.getInstancia().crear(usuario);
         //this.usuarios.add(usuario);
     }
 
