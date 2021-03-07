@@ -1,9 +1,11 @@
 package edu.pucmm.eict;
 
 import edu.pucmm.eict.db.BootStrapServices;
+import edu.pucmm.eict.db.ProductoCarritoServices;
 import edu.pucmm.eict.util.*;
 import io.javalin.Javalin;
 
+import java.math.BigDecimal;
 import java.sql.SQLException;
 
 public class Main {
@@ -20,7 +22,7 @@ public class Main {
         app.config.addStaticFiles("/publico");
 
 
-        new Ruta(app,administracion).ejecutarRutas();
+        //new Ruta(app,administracion).ejecutarRutas();
 
         //Prueba Crear tablas
         //Iniciando el servicio
