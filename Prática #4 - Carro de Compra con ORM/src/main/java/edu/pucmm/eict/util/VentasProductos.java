@@ -1,6 +1,7 @@
 package edu.pucmm.eict.util;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,7 +9,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Entity
-public class VentasProductos {
+public class VentasProductos implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) //crear el ID de forma automatica
@@ -20,16 +21,6 @@ public class VentasProductos {
     private List<ProductoCarrito> listaProductos;
     private double total;
 
-    public double getTotal() {
-        double total = 0;
-
-        for (ProductoCarrito producto:listaProductos) {
-            total = total + producto.getPrecio().doubleValue()*producto.getCantidad();
-        }
-        this.total = total;
-
-        return this.total;
-    }
 
     //private static long cont =0;
 
@@ -39,8 +30,7 @@ public class VentasProductos {
         this.listaProductos = listaProductos;
     }
 
-    public VentasProductos() {
-
+    public VentasProductos() { //debo tener un contructor vacio.
     }
 
     public long getId() {
@@ -75,4 +65,14 @@ public class VentasProductos {
         this.listaProductos = listaProductos;
     }
 
+    public double getTotal() {
+        double total = 0;
+
+        for (ProductoCarrito producto:listaProductos) {
+            total = total + producto.getPrecio().doubleValue()*producto.getCantidad();
+        }
+        this.total = total;
+
+        return this.total;
+    }
 }

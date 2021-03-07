@@ -5,7 +5,6 @@
              version="2.1">
     <persistence-unit name="MiUnidadPersistencia" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <class>edu.pucmm.eict.util.CarroCompra</class>
         <class>edu.pucmm.eict.util.ProductoCarrito</class>
         <class>edu.pucmm.eict.util.ProductoMostrador</class>
         <class>edu.pucmm.eict.util.Usuario</class>

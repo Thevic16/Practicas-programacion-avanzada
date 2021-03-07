@@ -3,9 +3,10 @@ package edu.pucmm.eict.util;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.io.Serializable;
 
 @Entity
-public class Usuario {
+public class Usuario implements Serializable {
 
     @Id
     private String usuario;
@@ -18,7 +19,7 @@ public class Usuario {
         this.password = password;
     }
 
-    public Usuario() {
+    public Usuario() { //debe tener un constructor vacio.
     }
 
     public String getUsuario() {
