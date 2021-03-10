@@ -80,65 +80,7 @@ public class Ruta {
             ctx.redirect("/index");
         });
 
-
-        //carrito de compas
-        app.get("/carritoDeCompra", ctx -> {
-            CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
-            Map<String, Object> modelo = new HashMap<>();
-            modelo.put("productos",carroCompra.getListaProductos());
-            modelo.put("cantidadCarrito", (carroCompra.obtenerCantidadProductos()));
-            modelo.put("totalPrecio",carroCompra.getPrecioTotal());
-
-            this.login = false;
-
-            ctx.render("/templates/CarritoDeCompra/CarritoDeCompra.html",modelo);
-        });
-
-        app.post("/carritoDeCompra/eliminar/", ctx -> {
-            int id = ctx.formParam("id",Integer.class).get();
-
-            CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
-
-            carroCompra.eliminarProducto(id);
-
-            ctx.redirect("/carritoDeCompra");
-        });
-
-        app.post("/carritoDeCompra/ProcesarCompra/", ctx -> {
-
-            String nombreCliente = ctx.formParam("nombreCliente");
-            CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
-
-            String pattern = "dd-MM-yyyy";
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
-
-
-            this.ventasProductos.setFechaCompra(simpleDateFormat.format(new Date()));
-            this.ventasProductos.setNombreCliente(nombreCliente);
-            this.ventasProductos.setListaProductos(carroCompra.getListaProductos());
-
-            administracion.agregarVentasProductos(this.ventasProductos);
-
-            VentasProductosServices.getInstancia().desconectar(this.ventasProductos);
-
-            this.ventasProductos = new VentasProductos(); //Creando la siguiente venta.
-            this.ventasProductos.setNombreCliente("Cliente en progreso......");
-            this.ventasProductos.setFechaCompra("No disponible");
-            VentasProductosServices.getInstancia().crear(this.ventasProductos);
-
-
-            ctx.sessionAttribute("carroCompra", null); // Limpiando el carrito de compras
-
-            ctx.redirect("/index");
-        });
-
-        app.get("/carritoDeCompra/LimpiarCarroCompra/", ctx -> {
-            ctx.sessionAttribute("carroCompra", null); // Limpiando el carrito de compras
-
-            ctx.redirect("/index");
-        });
-
-        //Login ventas realizadas
+        //ventas realizadas
         app.get("/ventasRealizadas/login", ctx -> {
             Map<String, Object> modelo = new HashMap<>();
             modelo.put("accion","/ventasRealizadas/login");
@@ -173,7 +115,6 @@ public class Ruta {
 
         });
 
-        //Ventas Realizadas
         app.get("/ventasRealizadas", ctx -> {
             if(this.login || ctx.cookie("Recuerdame") != null){
                 CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
@@ -238,7 +179,6 @@ public class Ruta {
             }
         });
 
-        //Eliminar Producto
         app.post("/listarProductos/eliminar/", ctx -> {
             int idProductoMostrador = ctx.formParam("id",Integer.class).get();
 
@@ -247,7 +187,6 @@ public class Ruta {
             ctx.redirect("/listarProductos");
         });
 
-        //Editar Producto
         app.post("/listarProductos/editar/", ctx -> {
             int idProductoMostrador = ctx.formParam("id",Integer.class).get();
             ctx.sessionAttribute("idProductoEditar",idProductoMostrador);
@@ -257,6 +196,8 @@ public class Ruta {
             modelo.put("titulo","| Editar Producto");
             modelo.put("titulo2","Editar Producto");
             modelo.put("accion","/listarProductos/editar/procesar");
+
+            this.fotos = new ArrayList<Foto>(); //Inicializando Array List para cargas las fotos correspondientes. 
 
 
             ctx.render("/templates/Crear-EditarProducto/Crear-Editar.html",modelo);
@@ -272,7 +213,6 @@ public class Ruta {
             ctx.redirect("/listarProductos");
         });
 
-        //Crear Producto
         app.get("/listarProductos/crearProducto", ctx -> {
             Map<String, Object> modelo = new HashMap<>();
             modelo.put("titulo","| Crear Producto");
@@ -296,9 +236,33 @@ public class Ruta {
             ctx.redirect("/listarProductos");
         });
 
+        //login
+
+        app.get("/login/crearCuenta", ctx -> {
+            Map<String, Object> modelo = new HashMap<>();
+            modelo.put("accion","/login/crearCuenta");
+
+            ctx.render("/templates/crearCuenta/crearCuenta.html",modelo);
+        });
+
+        app.post("/login/crearCuenta", ctx -> {
+            String usuario = ctx.formParam("usuario");
+            String nombre = ctx.formParam("nombre");
+            String password = ctx.formParam("password");
+            String confirmacion = ctx.formParam("confirmacion");
+
+            if(password.equals(confirmacion)){
+                administracion.agregarUsuario(new Usuario(usuario,nombre,password));
+
+                ctx.redirect("/index");
+            }
+            else{
+                ctx.redirect("/login/crearCuenta");
+            }
+
+        });
+
         //Fotos
-
-
         app.get("/listarProductos/foto/", ctx -> {
             Map<String, Object> modelo = new HashMap<>();
             modelo.put("fotos",fotos);
@@ -357,29 +321,61 @@ public class Ruta {
             });
         });
 
-        //login ListarProductos
-        app.get("/login/crearCuenta", ctx -> {
+        //carrito de compas
+        app.get("/carritoDeCompra", ctx -> {
+            CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
             Map<String, Object> modelo = new HashMap<>();
-            modelo.put("accion","/login/crearCuenta");
+            modelo.put("productos",carroCompra.getListaProductos());
+            modelo.put("cantidadCarrito", (carroCompra.obtenerCantidadProductos()));
+            modelo.put("totalPrecio",carroCompra.getPrecioTotal());
 
-            ctx.render("/templates/crearCuenta/crearCuenta.html",modelo);
+            this.login = false;
+
+            ctx.render("/templates/CarritoDeCompra/CarritoDeCompra.html",modelo);
         });
 
-        app.post("/login/crearCuenta", ctx -> {
-            String usuario = ctx.formParam("usuario");
-            String nombre = ctx.formParam("nombre");
-            String password = ctx.formParam("password");
-            String confirmacion = ctx.formParam("confirmacion");
+        app.post("/carritoDeCompra/eliminar/", ctx -> {
+            int id = ctx.formParam("id",Integer.class).get();
 
-            if(password.equals(confirmacion)){
-                administracion.agregarUsuario(new Usuario(usuario,nombre,password));
+            CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
 
-                ctx.redirect("/index");
-            }
-            else{
-                ctx.redirect("/login/crearCuenta");
-            }
+            carroCompra.eliminarProducto(id);
 
+            ctx.redirect("/carritoDeCompra");
+        });
+
+        app.post("/carritoDeCompra/ProcesarCompra/", ctx -> {
+
+            String nombreCliente = ctx.formParam("nombreCliente");
+            CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
+
+            String pattern = "dd-MM-yyyy";
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+
+
+            this.ventasProductos.setFechaCompra(simpleDateFormat.format(new Date()));
+            this.ventasProductos.setNombreCliente(nombreCliente);
+            this.ventasProductos.setListaProductos(carroCompra.getListaProductos());
+
+            administracion.agregarVentasProductos(this.ventasProductos);
+
+            VentasProductosServices.getInstancia().desconectar(this.ventasProductos);
+
+            this.ventasProductos = new VentasProductos(); //Creando la siguiente venta.
+            this.ventasProductos.setNombreCliente("Cliente en progreso......");
+            this.ventasProductos.setFechaCompra("No disponible");
+            VentasProductosServices.getInstancia().crear(this.ventasProductos);
+
+
+            ctx.sessionAttribute("carroCompra", null); // Limpiando el carrito de compras
+
+            ctx.redirect("/index");
+        });
+
+        app.get("/carritoDeCompra/LimpiarCarroCompra/", ctx -> {
+            ctx.sessionAttribute("carroCompra", null); // Limpiando el carrito de compras
+
+            ctx.redirect("/index");
         });
 
     }
