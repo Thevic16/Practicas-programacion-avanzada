@@ -1,15 +1,13 @@
 package edu.pucmm.eict.util;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 @Entity
 public class ProductoMostrador implements Serializable {
@@ -18,6 +16,9 @@ public class ProductoMostrador implements Serializable {
     private int id;
     private String nombre;
     private BigDecimal precio;
+
+    @OneToMany
+    private List<Foto> fotos;
 
 
     public ProductoMostrador() { // Debo tener un contructor vacio.
@@ -53,4 +54,15 @@ public class ProductoMostrador implements Serializable {
         this.precio = precio;
     }
 
+    public void agregarFoto(Foto foto){
+        fotos.add(foto);
+    }
+
+    public List<Foto> getFotos() {
+        return fotos;
+    }
+
+    public void setFotos(List<Foto> fotos) {
+        this.fotos = fotos;
+    }
 }

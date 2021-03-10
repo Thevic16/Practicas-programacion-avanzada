@@ -1,5 +1,5 @@
-edu/pucmm/eict/db/ProductoMostradorServices.java
- edu.pucmm.eict.db.ProductoMostradorServices
+edu/pucmm/eict/db/FotoServices.java
+ edu.pucmm.eict.db.FotoServices
 edu/pucmm/eict/db/UsuarioServices.java
  edu.pucmm.eict.db.UsuarioServices
 edu/pucmm/eict/util/CarroCompra.java
@@ -16,10 +16,14 @@ edu/pucmm/eict/util/VentasProductos.java
  edu.pucmm.eict.util.VentasProductos
 edu/pucmm/eict/db/BootStrapServices.java
  edu.pucmm.eict.db.BootStrapServices
-edu/pucmm/eict/util/ProductoMostrador.java
- edu.pucmm.eict.util.ProductoMostrador
 edu/pucmm/eict/util/Usuario.java
  edu.pucmm.eict.util.Usuario
+edu/pucmm/eict/util/Foto.java
+ edu.pucmm.eict.util.Foto
+edu/pucmm/eict/db/ProductoMostradorServices.java
+ edu.pucmm.eict.db.ProductoMostradorServices
+edu/pucmm/eict/util/ProductoMostrador.java
+ edu.pucmm.eict.util.ProductoMostrador
 edu/pucmm/eict/util/Administracion.java
  edu.pucmm.eict.util.Administracion
 edu/pucmm/eict/Main.java

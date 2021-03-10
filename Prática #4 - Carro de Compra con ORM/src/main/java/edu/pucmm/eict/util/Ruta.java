@@ -1,5 +1,6 @@
 package edu.pucmm.eict.util;
 
+import edu.pucmm.eict.db.FotoServices;
 import edu.pucmm.eict.db.VentasProductosServices;
 import io.javalin.Javalin;
 import io.javalin.plugin.rendering.JavalinRenderer;
@@ -7,18 +8,17 @@ import io.javalin.plugin.rendering.template.JavalinThymeleaf;
 import org.jasypt.util.text.AES256TextEncryptor;
 
 import javax.persistence.EntityManager;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Ruta {
     private Javalin app;
     private Administracion administracion;
     private boolean login = false;
     private VentasProductos ventasProductos;
+    private List<Foto> fotos;
 
     public Ruta (Javalin app, Administracion administracion){
         this.app = app;
@@ -28,6 +28,7 @@ public class Ruta {
         this.ventasProductos.setNombreCliente("Cliente en progreso......");
         this.ventasProductos.setFechaCompra("No disponible");
         VentasProductosServices.getInstancia().crear(this.ventasProductos);
+        this.fotos = new ArrayList<Foto>();
     }
 
     public void ejecutarRutas(){
@@ -286,9 +287,74 @@ public class Ruta {
             String nombreProducto = ctx.formParam("nombre");
             BigDecimal precioProducto =  new BigDecimal(ctx.formParam("precio",Integer.class).get());
 
-            administracion.agregarProducto(new ProductoMostrador(nombreProducto,precioProducto));
+            ProductoMostrador producto = new ProductoMostrador(nombreProducto,precioProducto);
+            producto.setFotos(this.fotos);
+            administracion.agregarProducto(producto);
+
+            this.fotos.clear(); // Limpiando fotos.
 
             ctx.redirect("/listarProductos");
+        });
+
+        //Fotos
+
+
+        app.get("/listarProductos/foto/", ctx -> {
+            Map<String, Object> modelo = new HashMap<>();
+            modelo.put("fotos",fotos);
+
+            ctx.render("/templates/listarFoto/listarFoto.html",modelo);
+        });
+
+        app.get("/listarProductos/foto/visualizar/:id", ctx -> {
+            try {
+                Foto foto = FotoServices.getInstancia().find(ctx.pathParam("id", Long.class).getOrNull());
+                if(foto==null){
+                    ctx.redirect("/listarProductos/foto/");
+                    return;
+                }
+                Map<String, Object> modelo = new HashMap<>();
+                modelo.put("foto", foto);
+                //
+                ctx.render("/templates/VisualizarFoto/visualizarFoto.html", modelo);
+            }catch (Exception e){
+                System.out.println("Error: "+e.getMessage());
+                ctx.redirect("/listarProductos/foto/");
+            }
+        });
+
+        app.get("/listarProductos/foto/eliminar/:id", ctx -> {
+            try {
+                Foto foto = FotoServices.getInstancia().find(ctx.pathParam("id", Long.class).getOrNull());
+                if(foto!=null){
+                    FotoServices.getInstancia().eliminar(foto.getId());
+                    for (Foto f:this.fotos) {
+                        if(f.getId() == foto.getId()){
+                            fotos.remove(f);
+                        }
+                    }
+                }
+            }catch (Exception e){
+                System.out.println("Error: "+e.getMessage());
+            }
+
+            ctx.redirect("/listarProductos/foto/");
+        });
+
+        app.post("/listarProductos/foto/subir", ctx -> {
+            ctx.uploadedFiles("foto").forEach(uploadedFile -> {
+                try {
+                    byte[] bytes = uploadedFile.getContent().readAllBytes();
+                    String encodedString = Base64.getEncoder().encodeToString(bytes);
+                    Foto foto = new Foto(uploadedFile.getFilename(), uploadedFile.getContentType(), encodedString);
+                    FotoServices.getInstancia().crear(foto);
+                    this.fotos.add(foto);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ctx.redirect("/listarProductos/foto/");
+            });
         });
 
         //login ListarProductos
