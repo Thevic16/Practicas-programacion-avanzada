@@ -1,5 +1,7 @@
 package edu.pucmm.eict.util;
 
+import edu.pucmm.eict.db.ProductoCarritoServices;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Connection;
@@ -17,7 +19,7 @@ public class VentasProductos implements Serializable {
     private String fechaCompra;
     private String nombreCliente;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<ProductoCarrito> listaProductos;
     private double total;
 
@@ -28,6 +30,12 @@ public class VentasProductos implements Serializable {
         this.fechaCompra = fechaCompra;
         this.nombreCliente = nombreCliente;
         this.listaProductos = listaProductos;
+
+        for (ProductoCarrito producto:listaProductos) {
+            ProductoCarritoServices.getInstancia().crear(producto);
+        }
+
+        this.total = getTotal();
     }
 
     public VentasProductos() { //debo tener un contructor vacio.
@@ -54,6 +62,7 @@ public class VentasProductos implements Serializable {
     }
 
     public void setNombreCliente(String nombreCliente) {
+
         this.nombreCliente = nombreCliente;
     }
 
@@ -62,6 +71,11 @@ public class VentasProductos implements Serializable {
     }
 
     public void setListaProductos(List<ProductoCarrito> listaProductos) {
+
+        for (ProductoCarrito producto:listaProductos) {
+            ProductoCarritoServices.getInstancia().crear(producto);
+        }
+
         this.listaProductos = listaProductos;
     }
 

@@ -1,5 +1,6 @@
 package edu.pucmm.eict.util;
 
+import edu.pucmm.eict.db.ProductoCarritoServices;
 import edu.pucmm.eict.db.ProductoMostradorServices;
 import edu.pucmm.eict.db.UsuarioServices;
 import edu.pucmm.eict.db.VentasProductosServices;
@@ -59,7 +60,8 @@ public class Administracion {
     }
 
     public void agregarVentasProductos(VentasProductos Ventasproducto) {
-        VentasProductosServices.getInstancia().crear(Ventasproducto);
+        //ProductoCarritoServices.getInstancia().
+        VentasProductosServices.getInstancia().editar(Ventasproducto);
         //this.listaVentasProductos.add(Ventasproducto);
     }
 
@@ -88,12 +90,13 @@ public class Administracion {
     }
 
     public void eliminarProducto(int id) {
-        ProductoMostradorServices.getInstancia().eliminar(ProductoMostradorServices.getInstancia().findProductById(id));
+        ProductoMostradorServices.getInstancia().eliminar(id);
         //this.listaProductos.remove(encontrarProductoPorId(id));
     }
 
     public void actualizarProducto(int idProductoAnterior,ProductoMostrador productoActualizado) {
-        ProductoMostradorServices.getInstancia().editar(productoActualizado);
+        ProductoMostradorServices.getInstancia().eliminar(idProductoAnterior);
+        ProductoMostradorServices.getInstancia().crear(productoActualizado);
         //this.listaProductos.set(listaProductos.indexOf(encontrarProductoPorId(idProductoAnterior)),productoActualizado);
     }
 

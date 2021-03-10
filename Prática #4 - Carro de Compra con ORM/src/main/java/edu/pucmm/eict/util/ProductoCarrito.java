@@ -1,7 +1,6 @@
 package edu.pucmm.eict.util;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -10,6 +9,8 @@ public class ProductoCarrito implements Serializable {
 
     @Id
     private int id;
+    @Id
+    private long IdVenta;
     private int cantidad;
     private String nombre;
     private BigDecimal precio;
@@ -18,11 +19,12 @@ public class ProductoCarrito implements Serializable {
     public ProductoCarrito() { //Debo tener un constructor vacio
     }
 
-    public ProductoCarrito(int id,String nombre, BigDecimal precio, int cantidad) {
+    public ProductoCarrito(int id, String nombre, BigDecimal precio, int cantidad,long IdVenta) {
         this.cantidad = cantidad;
         this.id = id;
         this.nombre = nombre;
         this.precio = precio;
+        this.IdVenta =IdVenta;
     }
 
     public int getCantidad() {

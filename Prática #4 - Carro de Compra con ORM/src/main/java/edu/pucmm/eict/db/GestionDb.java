@@ -137,4 +137,23 @@ public class GestionDb<T> {
             em.close();
         }
     }
+
+
+    public void desconectar(T entidad) throws IllegalArgumentException, EntityExistsException, PersistenceException{
+        EntityManager em = getEntityManager();
+
+        try {
+
+            em.getTransaction().begin();
+            em.detach(entidad);
+            em.getTransaction().commit();
+
+        }finally {
+            em.close();
+        }
+        return;
+    }
+
+
+
 }

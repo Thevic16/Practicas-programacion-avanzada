@@ -1,10 +1,12 @@
 package edu.pucmm.eict.util;
 
+import edu.pucmm.eict.db.VentasProductosServices;
 import io.javalin.Javalin;
 import io.javalin.plugin.rendering.JavalinRenderer;
 import io.javalin.plugin.rendering.template.JavalinThymeleaf;
 import org.jasypt.util.text.AES256TextEncryptor;
 
+import javax.persistence.EntityManager;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,11 +18,16 @@ public class Ruta {
     private Javalin app;
     private Administracion administracion;
     private boolean login = false;
+    private VentasProductos ventasProductos;
 
     public Ruta (Javalin app, Administracion administracion){
         this.app = app;
         this.administracion = administracion;
         registrandoPlantillas();
+        this.ventasProductos = new VentasProductos();
+        this.ventasProductos.setNombreCliente("Cliente en progreso......");
+        this.ventasProductos.setFechaCompra("No disponible");
+        VentasProductosServices.getInstancia().crear(this.ventasProductos);
     }
 
     public void ejecutarRutas(){
@@ -56,11 +63,18 @@ public class Ruta {
             String nombreProducto = administracion.encontrarProductoPorId(id).getNombre();
             BigDecimal precioProducto = administracion.encontrarProductoPorId(id).getPrecio();
 
-            ProductoCarrito productoCarrito = new ProductoCarrito(id,nombreProducto,precioProducto,cantidadProducto);
-
             CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
+            ProductoCarrito productoCarrito = carroCompra.encontrarProductoPorId(id);
 
-            carroCompra.agregarProducto(productoCarrito);
+            if(productoCarrito == null){
+                productoCarrito = new ProductoCarrito(id,nombreProducto,precioProducto,cantidadProducto,ventasProductos.getId());
+                carroCompra.agregarProducto(productoCarrito);
+            }
+            else{
+                productoCarrito.setCantidad(productoCarrito.getCantidad()+cantidadProducto);
+            }
+
+
 
             ctx.redirect("/index");
         });
@@ -97,8 +111,20 @@ public class Ruta {
             String pattern = "dd-MM-yyyy";
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 
-            VentasProductos ventasProductos = new VentasProductos(simpleDateFormat.format(new Date()),nombreCliente,carroCompra.getListaProductos());
-            administracion.agregarVentasProductos(ventasProductos);
+
+            this.ventasProductos.setFechaCompra(simpleDateFormat.format(new Date()));
+            this.ventasProductos.setNombreCliente(nombreCliente);
+            this.ventasProductos.setListaProductos(carroCompra.getListaProductos());
+
+            administracion.agregarVentasProductos(this.ventasProductos);
+
+            VentasProductosServices.getInstancia().desconectar(this.ventasProductos);
+
+            this.ventasProductos = new VentasProductos(); //Creando la siguiente venta.
+            this.ventasProductos.setNombreCliente("Cliente en progreso......");
+            this.ventasProductos.setFechaCompra("No disponible");
+            VentasProductosServices.getInstancia().crear(this.ventasProductos);
+
 
             ctx.sessionAttribute("carroCompra", null); // Limpiando el carrito de compras
 
