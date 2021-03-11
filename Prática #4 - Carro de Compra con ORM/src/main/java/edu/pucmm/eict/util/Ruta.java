@@ -76,8 +76,6 @@ public class Ruta {
                 productoCarrito.setCantidad(productoCarrito.getCantidad()+cantidadProducto);
             }
 
-
-
             ctx.redirect("/index");
         });
 
@@ -94,8 +92,6 @@ public class Ruta {
             String password = ctx.formParam("password");
             String recuerdame = ctx.formParam("Recuerdame");
 
-
-
             if (administracion.login(usuario,password)){
                 ctx.redirect("/ventasRealizadas");
                 this.login = true;
@@ -107,7 +103,6 @@ public class Ruta {
                     ctx.cookie("Recuerdame",textEncryptor.encrypt(usuario),604800);
                     //System.out.println("Cookie:"+ctx.cookie("Recuerdame"));
                 }
-
             }
             else{
                 ctx.redirect("/ventasRealizadas/login");
@@ -209,8 +204,9 @@ public class Ruta {
             int idProductoMostrador = ctx.sessionAttribute("idProductoEditar");
             String nombreProducto = ctx.sessionAttribute("nombreProducto");
             BigDecimal precioProducto =  ctx.sessionAttribute("precioProducto");
+            String descripcion = ctx.sessionAttribute("descripcion");
 
-            ProductoMostrador producto = new ProductoMostrador(nombreProducto,precioProducto);
+            ProductoMostrador producto = new ProductoMostrador(nombreProducto,precioProducto,descripcion);
             producto.setFotos(this.fotos);
             administracion.actualizarProducto(idProductoMostrador,producto);
 
@@ -234,8 +230,9 @@ public class Ruta {
         app.post("/listarProductos/crear/procesar", ctx -> {
             String nombreProducto = ctx.sessionAttribute("nombreProducto");
             BigDecimal precioProducto =  ctx.sessionAttribute("precioProducto");
+            String descripcion = ctx.sessionAttribute("descripcion");
 
-            ProductoMostrador producto = new ProductoMostrador(nombreProducto,precioProducto);
+            ProductoMostrador producto = new ProductoMostrador(nombreProducto,precioProducto,descripcion);
             producto.setFotos(this.fotos);
             administracion.agregarProducto(producto);
 
@@ -250,9 +247,11 @@ public class Ruta {
             //int idProductoMostrador = ctx.sessionAttribute("idProductoEditar"); //Pasandole el ID del producto.
             String nombreProducto = ctx.formParam("nombre");
             BigDecimal precioProducto =  new BigDecimal(ctx.formParam("precio",Integer.class).get());
+            String descripcion = ctx.formParam("descripcion");
 
             ctx.sessionAttribute("nombreProducto",nombreProducto);
             ctx.sessionAttribute("precioProducto",precioProducto);
+            ctx.sessionAttribute("descripcion",descripcion);
 
             Map<String, Object> modelo = new HashMap<>();
             modelo.put("fotos",fotos);
@@ -282,9 +281,11 @@ public class Ruta {
 
             String nombreProducto = ctx.formParam("nombre");
             BigDecimal precioProducto =  new BigDecimal(ctx.formParam("precio",Integer.class).get());
+            String descripcion = ctx.formParam("descripcion");
 
             ctx.sessionAttribute("nombreProducto",nombreProducto);
             ctx.sessionAttribute("precioProducto",precioProducto);
+            ctx.sessionAttribute("descripcion",descripcion);
 
             Map<String, Object> modelo = new HashMap<>();
             modelo.put("fotos",fotos);

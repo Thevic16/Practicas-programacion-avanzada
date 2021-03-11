@@ -16,17 +16,20 @@ public class ProductoMostrador implements Serializable {
     private int id;
     private String nombre;
     private BigDecimal precio;
+    private String descripcion;
 
     @OneToMany(fetch = FetchType.EAGER)
     private List<Foto> fotos;
 
 
+
     public ProductoMostrador() { // Debo tener un contructor vacio.
     }
 
-    public ProductoMostrador(String nombre, BigDecimal precio) {
+    public ProductoMostrador(String nombre, BigDecimal precio,String descripcion) {
         this.nombre = nombre;
         this.precio = precio;
+        this.descripcion = descripcion;
     }
 
 
@@ -52,6 +55,14 @@ public class ProductoMostrador implements Serializable {
 
     public void setPrecio(BigDecimal precio) {
         this.precio = precio;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 
     public void agregarFoto(Foto foto){
