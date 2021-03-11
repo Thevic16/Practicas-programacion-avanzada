@@ -17,7 +17,7 @@ public class ProductoMostrador implements Serializable {
     private String nombre;
     private BigDecimal precio;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Foto> fotos;
 
 
@@ -56,6 +56,10 @@ public class ProductoMostrador implements Serializable {
 
     public void agregarFoto(Foto foto){
         fotos.add(foto);
+    }
+
+    public void eliminarFoto(Foto foto){
+        fotos.remove(foto);
     }
 
     public List<Foto> getFotos() {

@@ -24,8 +24,8 @@ public class Main {
 
         new Ruta(app,administracion).ejecutarRutas();
 
-        //Prueba Crear tablas
-        //Iniciando el servicio
+
+        //Iniciando el servicio db.
         BootStrapServices.getInstancia().init();
 
     }

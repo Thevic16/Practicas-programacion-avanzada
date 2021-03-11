@@ -1,6 +1,7 @@
 package edu.pucmm.eict.util;
 
 import edu.pucmm.eict.db.FotoServices;
+import edu.pucmm.eict.db.ProductoMostradorServices;
 import edu.pucmm.eict.db.VentasProductosServices;
 import io.javalin.Javalin;
 import io.javalin.plugin.rendering.JavalinRenderer;
@@ -191,24 +192,29 @@ public class Ruta {
             int idProductoMostrador = ctx.formParam("id",Integer.class).get();
             ctx.sessionAttribute("idProductoEditar",idProductoMostrador);
 
-
             Map<String, Object> modelo = new HashMap<>();
             modelo.put("titulo","| Editar Producto");
             modelo.put("titulo2","Editar Producto");
-            modelo.put("accion","/listarProductos/editar/procesar");
+            //modelo.put("accion","/listarProductos/editar/procesar");
+            modelo.put("accion","/listarProductos/foto/fromEditar");
 
-            this.fotos = new ArrayList<Foto>(); //Inicializando Array List para cargas las fotos correspondientes. 
-
+            //this.fotos.clear(); //Limpiando Array List para cargas las fotos correspondientes.
+            ProductoMostrador producto = ProductoMostradorServices.getInstancia().find(idProductoMostrador);
+            this.fotos = producto.getFotos();
 
             ctx.render("/templates/Crear-EditarProducto/Crear-Editar.html",modelo);
         });
 
         app.post("/listarProductos/editar/procesar", ctx -> {
             int idProductoMostrador = ctx.sessionAttribute("idProductoEditar");
-            String nombreProducto = ctx.formParam("nombre");
-            BigDecimal precioProducto =  new BigDecimal(ctx.formParam("precio",Integer.class).get());
+            String nombreProducto = ctx.sessionAttribute("nombreProducto");
+            BigDecimal precioProducto =  ctx.sessionAttribute("precioProducto");
 
-            administracion.actualizarProducto(idProductoMostrador,new ProductoMostrador(nombreProducto,precioProducto));
+            ProductoMostrador producto = new ProductoMostrador(nombreProducto,precioProducto);
+            producto.setFotos(this.fotos);
+            administracion.actualizarProducto(idProductoMostrador,producto);
+
+            this.fotos = new ArrayList<Foto>(); // Limpiando fotos.
 
             ctx.redirect("/listarProductos");
         });
@@ -217,24 +223,179 @@ public class Ruta {
             Map<String, Object> modelo = new HashMap<>();
             modelo.put("titulo","| Crear Producto");
             modelo.put("titulo2","Crear Producto");
-            modelo.put("accion","/listarProductos/crear/procesar");
+            //modelo.put("accion","/listarProductos/crear/procesar");
+            modelo.put("accion","/listarProductos/foto/fromCrear");
 
+            this.fotos = new ArrayList<Foto>(); //Limpiando las lista de fotos.
 
             ctx.render("/templates/Crear-EditarProducto/Crear-Editar.html",modelo);
         });
 
         app.post("/listarProductos/crear/procesar", ctx -> {
-            String nombreProducto = ctx.formParam("nombre");
-            BigDecimal precioProducto =  new BigDecimal(ctx.formParam("precio",Integer.class).get());
+            String nombreProducto = ctx.sessionAttribute("nombreProducto");
+            BigDecimal precioProducto =  ctx.sessionAttribute("precioProducto");
 
             ProductoMostrador producto = new ProductoMostrador(nombreProducto,precioProducto);
             producto.setFotos(this.fotos);
             administracion.agregarProducto(producto);
 
-            this.fotos.clear(); // Limpiando fotos.
+            this.fotos = new ArrayList<Foto>(); // Limpiando fotos.
 
             ctx.redirect("/listarProductos");
         });
+
+
+        //Fotos
+        app.post("/listarProductos/foto/fromCrear", ctx -> {
+            //int idProductoMostrador = ctx.sessionAttribute("idProductoEditar"); //Pasandole el ID del producto.
+            String nombreProducto = ctx.formParam("nombre");
+            BigDecimal precioProducto =  new BigDecimal(ctx.formParam("precio",Integer.class).get());
+
+            ctx.sessionAttribute("nombreProducto",nombreProducto);
+            ctx.sessionAttribute("precioProducto",precioProducto);
+
+            Map<String, Object> modelo = new HashMap<>();
+            modelo.put("fotos",fotos);
+            //modelo.put("id",idProductoMostrador);
+            //modelo.put("metodo","get");
+            modelo.put("accion","/listarProductos/crear/procesar");
+            modelo.put("accionSubir","/listarProductos/foto/subir/fromCrear");
+            modelo.put("esCrear",true);
+
+            ctx.render("/templates/listarFoto/listarFoto.html",modelo);
+        });
+
+        app.get("/listarProductos/foto/fromCrear", ctx -> {
+            Map<String, Object> modelo = new HashMap<>();
+            modelo.put("fotos",fotos);
+            //modelo.put("id",idProductoMostrador);
+            //modelo.put("metodo","get");
+            modelo.put("accion","/listarProductos/crear/procesar");
+            modelo.put("accionSubir","/listarProductos/foto/subir/fromCrear");
+            modelo.put("esCrear",true);
+
+            ctx.render("/templates/listarFoto/listarFoto.html",modelo);
+        });
+
+        app.post("/listarProductos/foto/fromEditar", ctx -> {
+            int idProductoMostrador = ctx.sessionAttribute("idProductoEditar"); //Pasandole el ID del producto.
+
+            String nombreProducto = ctx.formParam("nombre");
+            BigDecimal precioProducto =  new BigDecimal(ctx.formParam("precio",Integer.class).get());
+
+            ctx.sessionAttribute("nombreProducto",nombreProducto);
+            ctx.sessionAttribute("precioProducto",precioProducto);
+
+            Map<String, Object> modelo = new HashMap<>();
+            modelo.put("fotos",fotos);
+            modelo.put("id",idProductoMostrador);
+            modelo.put("metodo","post");
+            modelo.put("accion","/listarProductos/editar/procesar");
+            modelo.put("accionSubir","/listarProductos/foto/subir/fromEditar");
+            modelo.put("esCrear",false);
+
+            ctx.render("/templates/listarFoto/listarFoto.html",modelo);
+        });
+
+        app.get("/listarProductos/foto/fromEditar", ctx -> {
+            int idProductoMostrador = ctx.sessionAttribute("idProductoEditar"); //Pasandole el ID del producto.
+
+            Map<String, Object> modelo = new HashMap<>();
+            modelo.put("fotos",this.fotos);
+            modelo.put("id",idProductoMostrador);
+            modelo.put("metodo","post");
+            modelo.put("accion","/listarProductos/editar/procesar");
+            modelo.put("accionSubir","/listarProductos/foto/subir/fromEditar");
+            modelo.put("esCrear",false);
+
+            ctx.render("/templates/listarFoto/listarFoto.html",modelo);
+        });
+
+        app.post("/listarProductos/foto/subir/fromCrear", ctx -> {
+            ctx.uploadedFiles("foto").forEach(uploadedFile -> {
+                try {
+                    byte[] bytes = uploadedFile.getContent().readAllBytes();
+                    String encodedString = Base64.getEncoder().encodeToString(bytes);
+                    Foto foto = new Foto(uploadedFile.getFilename(), uploadedFile.getContentType(), encodedString);
+                    FotoServices.getInstancia().crear(foto);
+                    this.fotos.add(foto);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ctx.redirect("/listarProductos/foto/fromCrear");
+            });
+        });
+
+        app.post("/listarProductos/foto/subir/fromEditar", ctx -> {
+            ctx.uploadedFiles("foto").forEach(uploadedFile -> {
+                try {
+                    byte[] bytes = uploadedFile.getContent().readAllBytes();
+                    String encodedString = Base64.getEncoder().encodeToString(bytes);
+                    Foto foto = new Foto(uploadedFile.getFilename(), uploadedFile.getContentType(), encodedString);
+                    FotoServices.getInstancia().crear(foto);
+                    this.fotos.add(foto);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                ctx.redirect("/listarProductos/foto/fromEditar");
+            });
+        });
+
+        app.get("/listarProductos/foto/visualizar/:id", ctx -> {
+            try {
+                Foto foto = FotoServices.getInstancia().find(ctx.pathParam("id", Long.class).getOrNull());
+                if(foto==null){
+                    ctx.redirect("/listarProductos/foto/");
+                    return;
+                }
+                Map<String, Object> modelo = new HashMap<>();
+                modelo.put("foto", foto);
+                //
+                ctx.render("/templates/VisualizarFoto/visualizarFoto.html", modelo);
+            }catch (Exception e){
+                System.out.println("Error: "+e.getMessage());
+                ctx.redirect("/listarProductos/foto/");
+            }
+        });
+
+        app.get("/listarProductos/foto/eliminar/:id/:idProducto/:esCrear", ctx -> {
+            int idProducto = 0;
+            boolean esCrear = ctx.pathParam("esCrear",boolean.class).getOrNull();
+            if(esCrear == false){
+                idProducto = ctx.pathParam("idProducto",int.class).getOrNull();
+            }
+
+            try {
+                Foto foto = FotoServices.getInstancia().find(ctx.pathParam("id", Long.class).getOrNull());
+                if(foto!=null){
+                    if(esCrear == false){
+                        ProductoMostrador producto = ProductoMostradorServices.getInstancia().findProductById(idProducto);
+                        producto.eliminarFoto(foto);
+                        //ProductoMostradorServices.getInstancia().editar(producto);
+                        administracion.actualizarProducto(idProducto,producto);
+                    }
+
+                    for (Foto f:this.fotos) {
+                        if(f.getId() == foto.getId()){
+                            fotos.remove(f);
+                            FotoServices.getInstancia().eliminar(foto.getId());
+                        }
+                    }
+                }
+            }catch (Exception e){
+                System.out.println("Error: "+e.getMessage());
+            }
+
+            if(esCrear ==true){
+                ctx.redirect("/listarProductos/foto/fromCrear");
+            }
+            else{
+                ctx.redirect("/listarProductos/foto/fromEditar");
+            }
+        });
+
 
         //login
 
@@ -260,65 +421,6 @@ public class Ruta {
                 ctx.redirect("/login/crearCuenta");
             }
 
-        });
-
-        //Fotos
-        app.get("/listarProductos/foto/", ctx -> {
-            Map<String, Object> modelo = new HashMap<>();
-            modelo.put("fotos",fotos);
-
-            ctx.render("/templates/listarFoto/listarFoto.html",modelo);
-        });
-
-        app.get("/listarProductos/foto/visualizar/:id", ctx -> {
-            try {
-                Foto foto = FotoServices.getInstancia().find(ctx.pathParam("id", Long.class).getOrNull());
-                if(foto==null){
-                    ctx.redirect("/listarProductos/foto/");
-                    return;
-                }
-                Map<String, Object> modelo = new HashMap<>();
-                modelo.put("foto", foto);
-                //
-                ctx.render("/templates/VisualizarFoto/visualizarFoto.html", modelo);
-            }catch (Exception e){
-                System.out.println("Error: "+e.getMessage());
-                ctx.redirect("/listarProductos/foto/");
-            }
-        });
-
-        app.get("/listarProductos/foto/eliminar/:id", ctx -> {
-            try {
-                Foto foto = FotoServices.getInstancia().find(ctx.pathParam("id", Long.class).getOrNull());
-                if(foto!=null){
-                    FotoServices.getInstancia().eliminar(foto.getId());
-                    for (Foto f:this.fotos) {
-                        if(f.getId() == foto.getId()){
-                            fotos.remove(f);
-                        }
-                    }
-                }
-            }catch (Exception e){
-                System.out.println("Error: "+e.getMessage());
-            }
-
-            ctx.redirect("/listarProductos/foto/");
-        });
-
-        app.post("/listarProductos/foto/subir", ctx -> {
-            ctx.uploadedFiles("foto").forEach(uploadedFile -> {
-                try {
-                    byte[] bytes = uploadedFile.getContent().readAllBytes();
-                    String encodedString = Base64.getEncoder().encodeToString(bytes);
-                    Foto foto = new Foto(uploadedFile.getFilename(), uploadedFile.getContentType(), encodedString);
-                    FotoServices.getInstancia().crear(foto);
-                    this.fotos.add(foto);
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                ctx.redirect("/listarProductos/foto/");
-            });
         });
 
         //carrito de compas

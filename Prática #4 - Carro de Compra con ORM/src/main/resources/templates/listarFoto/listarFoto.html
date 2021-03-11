@@ -16,14 +16,19 @@
         <h1 class="display-4">Acciones para las foto(s) del producto</h1>
     </div>
     <h2>Formulario Subir Imagen</h2>
-    <form action="/listarProductos/foto/subir" method="post" enctype="multipart/form-data">
+    <form th:attr="action=${accionSubir}" method="post" enctype="multipart/form-data">
         <div class="form-group">
             <label for="foto">Foto</label>
             <input class="form-control" id="foto" type="file" name="foto" multiple required>
         </div>
-        <button type="submit" class="btn btn-primary">Enviar</button>
+        <button type="submit" class="btn btn-dark">Enviar</button>
+        <button type="submit" class="btn btn-dark" form="form2">Finalizar Subida de fotos</button>
     </form>
     <hr/>
+
+    <form th:attr="action=${accion}" method="post" id="form2">
+        <td><input type="hidden" id = "id" name="id" th:value="${id}"></td>
+    </form>
 
     <p class="lead">Listado de la Fotos</p>
 
@@ -43,7 +48,7 @@
             <td th:text="${foto.mimeType}">PNG</td>
             <td>
                 <a th:text="Visualizar" th:href="'/listarProductos/foto/visualizar/'+${foto.id}" th class="btn btn-secondary btn-sm"/> |
-                <a th:text="Eliminar" th:href="'/listarProductos/foto/eliminar/'+${foto.id}" th class="btn btn-danger btn-sm"/>
+                <a th:text="Eliminar" th:href="'/listarProductos/foto/eliminar/'+${foto.id}+'/'+${id}+'/'+${esCrear}" th class="btn btn-danger btn-sm"/>
             </td>
         </tr>
         </tbody>
