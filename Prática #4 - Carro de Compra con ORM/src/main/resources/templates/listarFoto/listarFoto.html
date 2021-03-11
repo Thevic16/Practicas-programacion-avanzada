@@ -5,6 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 
@@ -22,7 +24,20 @@
             <input class="form-control" id="foto" type="file" name="foto" multiple required>
         </div>
         <button type="submit" class="btn btn-dark">Enviar</button>
-        <button type="submit" class="btn btn-dark" form="form2">Finalizar Subida de fotos</button>
+        <button type="submit" class="btn btn-dark" form="form3">Cancelar</button>
+        <button type="submit" class="btn btn-dark hide" form="form2" id="finalizar">Finalizar Subida de fotos</button>
+
+        <script>
+            $(function(){
+                var rowCount = $('#tabla tbody tr').length;
+                if(rowCount < 1){
+                    $('#finalizar').attr('disabled','disabled');
+                } else {
+                    $('#finalizar').removeAttr('disabled');
+                }
+            });
+        </script>
+
     </form>
     <hr/>
 
@@ -30,9 +45,12 @@
         <td><input type="hidden" id = "id" name="id" th:value="${id}"></td>
     </form>
 
+    <form  method="get" id ="form3" action="/listarProductos">
+    </form>
+
     <p class="lead">Listado de la Fotos</p>
 
-    <table class="table">
+    <table class="table" id="tabla">
         <thead>
         <tr>
             <th scope="col">#</th>

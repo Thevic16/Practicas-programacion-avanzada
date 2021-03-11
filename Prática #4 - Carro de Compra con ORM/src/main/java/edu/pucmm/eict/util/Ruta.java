@@ -370,17 +370,10 @@ public class Ruta {
             try {
                 Foto foto = FotoServices.getInstancia().find(ctx.pathParam("id", Long.class).getOrNull());
                 if(foto!=null){
-                    if(esCrear == false){
-                        ProductoMostrador producto = ProductoMostradorServices.getInstancia().findProductById(idProducto);
-                        producto.eliminarFoto(foto);
-                        //ProductoMostradorServices.getInstancia().editar(producto);
-                        administracion.actualizarProducto(idProducto,producto);
-                    }
-
                     for (Foto f:this.fotos) {
                         if(f.getId() == foto.getId()){
                             fotos.remove(f);
-                            FotoServices.getInstancia().eliminar(foto.getId());
+                            //FotoServices.getInstancia().eliminar(foto.getId());
                         }
                     }
                 }
