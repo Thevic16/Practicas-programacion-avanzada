@@ -61,7 +61,7 @@
 <body class="text-center">
 
 <main class="form-signin">
-    <h1>Información Detallada Producto.</h1>
+    <h1>Información Detallada Producto</h1>
     <table class="table table-hover">
         <thead>
         <tr>
@@ -89,7 +89,7 @@
         </tr>
         </tbody>
     </table>
-
+    <h2>Comentar</h2>
     <form method="post" action="/index/VisualizarInfoProduct/procecarComentario/">
         <input type="text" id="nombreCliente" name="nombreCliente" class="form-control" placeholder="Nombre Cliente" required >
         <br>
@@ -99,6 +99,23 @@
         <button type="submit" class="btn btn-dark">Enviar</button>
     </form>
 
+    <br>
+    <h2>Lista de Comentarios</h2>
+    <br>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="comentario : ${comentarios}">
+            <th scope="row" th:text="${comentario.nombreCLiente}"></th>
+            <td th:text="${comentario.textoComentario}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <br>
     <a href="/index/VisualizarInfoProduct/volver/" class="btn btn-dark" tabindex="-1" role="button" aria-disabled="true">Volver a la Página Principal</a>
 
 </main>

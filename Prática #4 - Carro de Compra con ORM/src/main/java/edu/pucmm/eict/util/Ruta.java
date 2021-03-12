@@ -95,6 +95,7 @@ public class Ruta {
             Map<String, Object> modelo = new HashMap<>();
             modelo.put("producto",producto);
             modelo.put("fotos",fotos);
+            modelo.put("comentarios",producto.getComentarios());
 
             ctx.render("/templates/VisualizarInfoProduct/VisualizarInfoProduct.html",modelo);
         });
@@ -107,6 +108,7 @@ public class Ruta {
             Map<String, Object> modelo = new HashMap<>();
             modelo.put("producto",producto);
             modelo.put("fotos",fotos);
+            modelo.put("comentarios",this.comentarios);
 
             ctx.render("/templates/VisualizarInfoProduct/VisualizarInfoProduct.html",modelo);
         });
