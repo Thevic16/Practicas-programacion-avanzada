@@ -10,6 +10,7 @@
         <class>edu.pucmm.eict.util.Usuario</class>
         <class>edu.pucmm.eict.util.VentasProductos</class>
         <class>edu.pucmm.eict.util.Foto</class>
+        <class>edu.pucmm.eict.util.Comentario</class>
 
         <properties>
             <!--<property name="javax.persistence.jdbc.url" value="jdbc:h2:mem:test" />-->

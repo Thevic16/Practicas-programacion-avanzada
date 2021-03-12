@@ -19,17 +19,34 @@ public class ProductoMostrador implements Serializable {
     private String descripcion;
 
     @OneToMany(fetch = FetchType.EAGER)
+    @OrderColumn(name="id")
     private List<Foto> fotos;
 
-
+    @OneToMany(fetch = FetchType.EAGER)
+    @OrderColumn(name="id")
+    private List<Comentario> comentarios;
 
     public ProductoMostrador() { // Debo tener un contructor vacio.
     }
 
-    public ProductoMostrador(String nombre, BigDecimal precio,String descripcion) {
+
+
+    public ProductoMostrador(String nombre, BigDecimal precio, String descripcion) {
         this.nombre = nombre;
         this.precio = precio;
         this.descripcion = descripcion;
+    }
+
+    public List<Comentario> getComentarios() {
+        return comentarios;
+    }
+
+    public void setComentarios(List<Comentario> comentarios) {
+        this.comentarios = comentarios;
+    }
+
+    public void agregarComentario(Comentario comentario) {
+        this.comentarios.add(comentario);
     }
 
 

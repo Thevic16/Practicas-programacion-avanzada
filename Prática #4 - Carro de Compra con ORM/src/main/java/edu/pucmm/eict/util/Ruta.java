@@ -1,5 +1,6 @@
 package edu.pucmm.eict.util;
 
+import edu.pucmm.eict.db.ComentarioServices;
 import edu.pucmm.eict.db.FotoServices;
 import edu.pucmm.eict.db.ProductoMostradorServices;
 import edu.pucmm.eict.db.VentasProductosServices;
@@ -20,6 +21,7 @@ public class Ruta {
     private boolean login = false;
     private VentasProductos ventasProductos;
     private List<Foto> fotos;
+    private List<Comentario> comentarios;
 
     public Ruta (Javalin app, Administracion administracion){
         this.app = app;
@@ -30,6 +32,7 @@ public class Ruta {
         this.ventasProductos.setFechaCompra("No disponible");
         VentasProductosServices.getInstancia().crear(this.ventasProductos);
         this.fotos = new ArrayList<Foto>();
+        this.comentarios = new ArrayList<Comentario>();
     }
 
     public void ejecutarRutas(){
@@ -77,6 +80,67 @@ public class Ruta {
             }
 
             ctx.redirect("/index");
+        });
+
+        app.post("/index/VisualizarInfoProduct/", ctx -> {
+            int id = ctx.formParam("idVisualizar",Integer.class).get();
+            ctx.sessionAttribute("idVisualizar",id);
+            ProductoMostrador producto = administracion.encontrarProductoPorId(id);
+            ctx.sessionAttribute("nombreProducto1",producto.getNombre());
+            ctx.sessionAttribute("precioProducto1",producto.getPrecio());
+            ctx.sessionAttribute("descripcionProducto1",producto.getDescripcion());
+
+            List<Foto> fotos=  producto.getFotos();
+
+            Map<String, Object> modelo = new HashMap<>();
+            modelo.put("producto",producto);
+            modelo.put("fotos",fotos);
+
+            ctx.render("/templates/VisualizarInfoProduct/VisualizarInfoProduct.html",modelo);
+        });
+
+        app.get("/index/VisualizarInfoProduct/", ctx -> {
+            int id = ctx.sessionAttribute("idVisualizar");
+            ProductoMostrador producto = administracion.encontrarProductoPorId(id);
+            this.fotos=  producto.getFotos();
+
+            Map<String, Object> modelo = new HashMap<>();
+            modelo.put("producto",producto);
+            modelo.put("fotos",fotos);
+
+            ctx.render("/templates/VisualizarInfoProduct/VisualizarInfoProduct.html",modelo);
+        });
+
+        app.post("/index/VisualizarInfoProduct/procecarComentario/", ctx -> {
+            String nombreCliente  = ctx.formParam("nombreCliente");
+            String comentario  = ctx.formParam("comentario");
+
+            Comentario comentarioInstancia = new Comentario(nombreCliente,comentario);
+            this.comentarios.add(comentarioInstancia);
+            ComentarioServices.getInstancia().crear(comentarioInstancia);
+
+            ctx.redirect("/index/VisualizarInfoProduct/");
+        });
+
+        app.get("/index/VisualizarInfoProduct/volver/", ctx -> {
+
+            String nombreProducto1 = ctx.sessionAttribute("nombreProducto1");
+            BigDecimal precioProducto = ctx.sessionAttribute("precioProducto1");
+            String descripcionProducto1 = ctx.sessionAttribute("descripcionProducto1");
+
+            ProductoMostrador productoNuevo = new ProductoMostrador(nombreProducto1,precioProducto,descripcionProducto1);
+
+            int idProducto  = ctx.sessionAttribute("idVisualizar");
+
+            productoNuevo.setFotos(ProductoMostradorServices.getInstancia().find(idProducto).getFotos());
+            productoNuevo.setComentarios(this.comentarios);
+
+            ProductoMostradorServices.getInstancia().eliminar(idProducto);
+
+            ProductoMostradorServices.getInstancia().crear(productoNuevo);
+            //administracion.actualizarProducto(idProducto,producto);
+
+            ctx.redirect("/index/");
         });
 
         //ventas realizadas

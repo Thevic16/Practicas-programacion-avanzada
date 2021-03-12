@@ -20,13 +20,17 @@ edu/pucmm/eict/util/Usuario.java
  edu.pucmm.eict.util.Usuario
 edu/pucmm/eict/util/Foto.java
  edu.pucmm.eict.util.Foto
-edu/pucmm/eict/db/ProductoMostradorServices.java
- edu.pucmm.eict.db.ProductoMostradorServices
-edu/pucmm/eict/Main.java
- edu.pucmm.eict.Main
-edu/pucmm/eict/util/Administracion.java
- edu.pucmm.eict.util.Administracion
-edu/pucmm/eict/util/Ruta.java
- edu.pucmm.eict.util.Ruta
+edu/pucmm/eict/util/Comentario.java
+ edu.pucmm.eict.util.Comentario
+edu/pucmm/eict/db/ComentarioServices.java
+ edu.pucmm.eict.db.ComentarioServices
 edu/pucmm/eict/util/ProductoMostrador.java
  edu.pucmm.eict.util.ProductoMostrador
+edu/pucmm/eict/db/ProductoMostradorServices.java
+ edu.pucmm.eict.db.ProductoMostradorServices
+edu/pucmm/eict/util/Administracion.java
+ edu.pucmm.eict.util.Administracion
+edu/pucmm/eict/Main.java
+ edu.pucmm.eict.Main
+edu/pucmm/eict/util/Ruta.java
+ edu.pucmm.eict.util.Ruta
