@@ -26,7 +26,7 @@ public class Ruta {
     private int cantMaxProducto;
     private boolean botonSiguiente;
     private boolean botonAtras;
-    private static int costantePagi = 3;
+    private static int costantePagi = 10;
 
     public Ruta (Javalin app, Administracion administracion){
         this.app = app;

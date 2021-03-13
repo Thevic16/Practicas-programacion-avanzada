@@ -133,39 +133,30 @@
       </thead>
       <tbody>
           <tr th:each="producto : ${productos}">
-            <form method="post" action="/index/agregar/" id="form1">
+            <form method="post" action="/index/agregar/">
               <th scope="row" th:text="${producto.nombre}" > Ram 64Gb </th>
               <td th:text="${producto.precio}" >15</td>
               <td><input type="number" name="cantidad" required></td>
-              <td><button type="submit" class="btn btn-light" form="form1">Agregar</button></td>
+              <td><button type="submit" class="btn btn-light">Agregar</button></td>
               <td><button type="submit" class="btn btn-light" form="form2">Información</button></td>
               <td><input type="hidden" id = "id" name="id" th:value="${producto.id}"></td>
             </form>
+          </tr>
 
+          <tr th:each="producto : ${productos}">
             <form method="post" action="/index/VisualizarInfoProduct/" id="form2">
               <input type="hidden" id = "idVisualizar" name="idVisualizar" th:value="${producto.id}">
             </form>
           </tr>
-
-        <!--
-        <th scope="row"> Ram 64Gb </th>
-        <td>15</td>
-        <td><input type="number" name="cantidad"></td>
-        <td><a href="#" class="btn btn-sm btn-secondary fw-bold border-white bg-white">Agregar</a></td>
-        -->
-
-      </tr>
-
       </tbody>
     </table>
-    <!--
+
         <div>
           <a href="/index/atrasPagina" class="btn btn-primary btn-light" th:if="${botonAtras}">Anterior</a>
           <a href="/index/siguientePagina" class="btn btn-primary btn-light" th:if="${botonSiguiente}">Siguiente</a>
         </div>
-    -->
 
-      </main>
+  </main>
 
 
 
@@ -174,8 +165,6 @@
         <p>Sitio de Compras, Por Víctor Gómez.</p>
       </footer>
     </div>
-
-
 
       </body>
     </html>
