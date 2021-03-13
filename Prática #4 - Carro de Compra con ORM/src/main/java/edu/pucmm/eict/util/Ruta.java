@@ -21,7 +21,7 @@ public class Ruta {
     private boolean login = false;
     private VentasProductos ventasProductos;
     private List<Foto> fotos;
-    private List<Comentario> comentarios;
+    //private List<Comentario> comentarios;
 
     public Ruta (Javalin app, Administracion administracion){
         this.app = app;
@@ -32,7 +32,7 @@ public class Ruta {
         this.ventasProductos.setFechaCompra("No disponible");
         VentasProductosServices.getInstancia().crear(this.ventasProductos);
         this.fotos = new ArrayList<Foto>();
-        this.comentarios = new ArrayList<Comentario>();
+        //this.comentarios = new ArrayList<Comentario>();
     }
 
     public void ejecutarRutas(){
@@ -110,12 +110,12 @@ public class Ruta {
             int id = ctx.sessionAttribute("idVisualizar");
             ProductoMostrador producto = administracion.encontrarProductoPorId(id);
             this.fotos=  producto.getFotos();
-            this.comentarios = producto.getComentarios();
+            //this.comentarios = producto.getComentarios();
 
             Map<String, Object> modelo = new HashMap<>();
             modelo.put("producto",producto);
             modelo.put("fotos",fotos);
-            modelo.put("comentarios",this.comentarios);
+            modelo.put("comentarios",producto.getComentarios());
             if(ctx.cookie("Recuerdame") != null){
                 modelo.put("login",true);
             }
@@ -132,7 +132,7 @@ public class Ruta {
             int idProducto  = ctx.formParam("idProducto",Integer.class).get();
 
             Comentario comentarioInstancia = new Comentario(nombreCliente,comentario);
-            this.comentarios.add(comentarioInstancia);
+            //this.comentarios.add(comentarioInstancia);
             ComentarioServices.getInstancia().crear(comentarioInstancia);
 
             ProductoMostrador producto = ProductoMostradorServices.getInstancia().findProductById(idProducto);
@@ -161,7 +161,7 @@ public class Ruta {
                 }
                 i++;
             }
-
+            /*
             n = this.comentarios.size();
             i = 0;
             encontrado = false;
@@ -173,6 +173,7 @@ public class Ruta {
               i++;
             }
 
+             */
             ProductoMostradorServices.getInstancia().editar(producto);
             ComentarioServices.getInstancia().eliminar(idComentario);
 
@@ -185,6 +186,7 @@ public class Ruta {
             BigDecimal precioProducto = ctx.sessionAttribute("precioProducto1");
             String descripcionProducto1 = ctx.sessionAttribute("descripcionProducto1");
 
+            /*
             ProductoMostrador productoNuevo = new ProductoMostrador(nombreProducto1,precioProducto,descripcionProducto1);
 
             int idProducto  = ctx.sessionAttribute("idVisualizar");
@@ -197,6 +199,7 @@ public class Ruta {
             ProductoMostradorServices.getInstancia().crear(productoNuevo);
             //administracion.actualizarProducto(idProducto,producto);
 
+             */
             ctx.redirect("/index/");
         });
 
