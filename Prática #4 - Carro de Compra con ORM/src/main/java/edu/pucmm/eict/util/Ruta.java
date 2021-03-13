@@ -96,6 +96,12 @@ public class Ruta {
             modelo.put("producto",producto);
             modelo.put("fotos",fotos);
             modelo.put("comentarios",producto.getComentarios());
+            if(ctx.cookie("Recuerdame") != null){
+                modelo.put("login",true);
+            }
+            else{
+                modelo.put("login",false);
+            }
 
             ctx.render("/templates/VisualizarInfoProduct/VisualizarInfoProduct.html",modelo);
         });
@@ -104,11 +110,18 @@ public class Ruta {
             int id = ctx.sessionAttribute("idVisualizar");
             ProductoMostrador producto = administracion.encontrarProductoPorId(id);
             this.fotos=  producto.getFotos();
+            this.comentarios = producto.getComentarios();
 
             Map<String, Object> modelo = new HashMap<>();
             modelo.put("producto",producto);
             modelo.put("fotos",fotos);
             modelo.put("comentarios",this.comentarios);
+            if(ctx.cookie("Recuerdame") != null){
+                modelo.put("login",true);
+            }
+            else{
+                modelo.put("login",false);
+            }
 
             ctx.render("/templates/VisualizarInfoProduct/VisualizarInfoProduct.html",modelo);
         });
@@ -116,10 +129,52 @@ public class Ruta {
         app.post("/index/VisualizarInfoProduct/procecarComentario/", ctx -> {
             String nombreCliente  = ctx.formParam("nombreCliente");
             String comentario  = ctx.formParam("comentario");
+            int idProducto  = ctx.formParam("idProducto",Integer.class).get();
 
             Comentario comentarioInstancia = new Comentario(nombreCliente,comentario);
             this.comentarios.add(comentarioInstancia);
             ComentarioServices.getInstancia().crear(comentarioInstancia);
+
+            ProductoMostrador producto = ProductoMostradorServices.getInstancia().findProductById(idProducto);
+            producto.getComentarios().add(comentarioInstancia);
+
+            ProductoMostradorServices.getInstancia().editar(producto);
+
+
+            ctx.redirect("/index/VisualizarInfoProduct/");
+        });
+
+        app.post("/index/VisualizarInfoProduct/eliminarComentario/", ctx -> {
+            int idComentario  = ctx.formParam("idComentario",Integer.class).get();
+            int idProducto2  = ctx.formParam("idProducto2",Integer.class).get();
+
+            ProductoMostrador producto = ProductoMostradorServices.getInstancia().findProductById(idProducto2);
+            Comentario comentario =ComentarioServices.getInstancia().find(idComentario);
+
+            int n = producto.getComentarios().size();
+            int i = 0;
+            boolean encontrado = false;
+            while (!encontrado && i<n) {
+                if(comentario.getId() == producto.getComentarios().get(i).getId()){
+                    producto.getComentarios().remove(i);
+                    encontrado = true;
+                }
+                i++;
+            }
+
+            n = this.comentarios.size();
+            i = 0;
+            encontrado = false;
+            while (!encontrado && i<n) {
+              if(comentario.getId() == this.comentarios.get(i).getId()){
+                  this.comentarios.remove(i);
+                  encontrado = true;
+              }
+              i++;
+            }
+
+            ProductoMostradorServices.getInstancia().editar(producto);
+            ComentarioServices.getInstancia().eliminar(idComentario);
 
             ctx.redirect("/index/VisualizarInfoProduct/");
         });
