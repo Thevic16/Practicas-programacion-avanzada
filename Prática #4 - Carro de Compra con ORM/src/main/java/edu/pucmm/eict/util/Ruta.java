@@ -22,6 +22,11 @@ public class Ruta {
     private VentasProductos ventasProductos;
     private List<Foto> fotos;
     //private List<Comentario> comentarios;
+    private int primerProducto;
+    private int cantMaxProducto;
+    private boolean botonSiguiente;
+    private boolean botonAtras;
+    private static int costantePagi = 3;
 
     public Ruta (Javalin app, Administracion administracion){
         this.app = app;
@@ -33,6 +38,10 @@ public class Ruta {
         VentasProductosServices.getInstancia().crear(this.ventasProductos);
         this.fotos = new ArrayList<Foto>();
         //this.comentarios = new ArrayList<Comentario>();
+        this.primerProducto =0;
+        this.cantMaxProducto = costantePagi;
+        this.botonSiguiente = true;
+        this.botonAtras =false;
     }
 
     public void ejecutarRutas(){
@@ -53,12 +62,47 @@ public class Ruta {
         app.get("/index", ctx -> {
             CarroCompra carroCompra = ctx.sessionAttribute("carroCompra");
             Map<String, Object> modelo = new HashMap<>();
-            modelo.put("productos",administracion.getListaProductos());
+            modelo.put("productos",ProductoMostradorServices.getInstancia().findAll(this.primerProducto,this.cantMaxProducto));
             modelo.put("cantidadCarrito", (carroCompra.obtenerCantidadProductos()));
+            modelo.put("botonSiguiente",this.botonSiguiente);
+            modelo.put("botonAtras",this.botonAtras);
 
             this.login = false;
 
             ctx.render("/templates/index/index.html",modelo);
+        });
+
+        app.get("/index/siguientePagina", ctx -> {
+            int total = (int) ProductoMostradorServices.getInstancia().total();
+            int a = (this.primerProducto +costantePagi);
+            int b = (this.primerProducto +2*costantePagi);
+
+            if(a < total){
+                this.primerProducto = a;
+
+                if(b >= total){
+                    this.botonSiguiente =false;
+                }
+            }
+            this.botonAtras =true;
+
+            ctx.redirect("/index");
+        });
+
+        app.get("/index/atrasPagina", ctx -> {
+            this.primerProducto= (this.primerProducto -costantePagi);
+            int a = (this.primerProducto);
+
+            if(a == 0){
+                this.botonAtras =false;
+            }
+            else{
+                this.botonAtras =true;
+            }
+
+            this.botonSiguiente =true;
+
+            ctx.redirect("/index");
         });
 
 
