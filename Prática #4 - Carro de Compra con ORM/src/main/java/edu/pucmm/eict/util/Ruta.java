@@ -26,7 +26,7 @@ public class Ruta {
     private int cantMaxProducto;
     private boolean botonSiguiente;
     private boolean botonAtras;
-    private static int costantePagi = 10;
+    private static int costantePagi = 3;
 
     public Ruta (Javalin app, Administracion administracion){
         this.app = app;
@@ -40,7 +40,7 @@ public class Ruta {
         //this.comentarios = new ArrayList<Comentario>();
         this.primerProducto =0;
         this.cantMaxProducto = costantePagi;
-        this.botonSiguiente = true;
+        this.botonSiguiente = false;
         this.botonAtras =false;
     }
 
@@ -51,6 +51,31 @@ public class Ruta {
             if(ctx.sessionAttribute("carroCompra") == null){
                 CarroCompra carroCompra= new CarroCompra(); // Creando carrito de compra, aqui se almacenan los productos del usuario.
                 ctx.sessionAttribute("carroCompra", carroCompra);
+            }
+
+            if((this.primerProducto + this.cantMaxProducto) < ProductoMostradorServices.getInstancia().total()){
+                this.botonSiguiente =true;
+            }
+            else{
+                this.botonSiguiente =false;
+            }
+
+        });
+
+        app.after(ctx -> {
+            // runs after all requests
+            if(this.primerProducto == 0){
+                this.botonAtras =false;
+            }
+            else{
+                this.botonAtras =true;
+            }
+
+            if((this.primerProducto + this.cantMaxProducto) < ProductoMostradorServices.getInstancia().total()){
+                this.botonSiguiente =true;
+            }
+            else{
+                this.botonSiguiente =false;
             }
         });
 
@@ -75,16 +100,10 @@ public class Ruta {
         app.get("/index/siguientePagina", ctx -> {
             int total = (int) ProductoMostradorServices.getInstancia().total();
             int a = (this.primerProducto +costantePagi);
-            int b = (this.primerProducto +2*costantePagi);
 
             if(a < total){
                 this.primerProducto = a;
-
-                if(b >= total){
-                    this.botonSiguiente =false;
-                }
             }
-            this.botonAtras =true;
 
             ctx.redirect("/index");
         });
@@ -92,15 +111,6 @@ public class Ruta {
         app.get("/index/atrasPagina", ctx -> {
             this.primerProducto= (this.primerProducto -costantePagi);
             int a = (this.primerProducto);
-
-            if(a == 0){
-                this.botonAtras =false;
-            }
-            else{
-                this.botonAtras =true;
-            }
-
-            this.botonSiguiente =true;
 
             ctx.redirect("/index");
         });
@@ -126,8 +136,8 @@ public class Ruta {
             ctx.redirect("/index");
         });
 
-        app.post("/index/VisualizarInfoProduct/", ctx -> {
-            int id = ctx.formParam("idVisualizar",Integer.class).get();
+        app.get("/index/VisualizarInfoProduct/:idVisualizar", ctx -> {
+            int id = ctx.pathParam("idVisualizar",Integer.class).get();
             ctx.sessionAttribute("idVisualizar",id);
             ProductoMostrador producto = administracion.encontrarProductoPorId(id);
             ctx.sessionAttribute("nombreProducto1",producto.getNombre());
@@ -224,7 +234,7 @@ public class Ruta {
             ctx.redirect("/index/VisualizarInfoProduct/");
         });
 
-        app.get("/index/VisualizarInfoProduct/volver/", ctx -> {
+        app.get("/index/VisualizarInfoProductVolver/", ctx -> {
 
             String nombreProducto1 = ctx.sessionAttribute("nombreProducto1");
             BigDecimal precioProducto = ctx.sessionAttribute("precioProducto1");
