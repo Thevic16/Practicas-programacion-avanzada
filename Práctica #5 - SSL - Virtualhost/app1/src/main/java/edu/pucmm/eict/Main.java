@@ -1,8 +1,6 @@
 package edu.pucmm.eict;
 
 import io.javalin.Javalin;
-import io.javalin.plugin.rendering.JavalinRenderer;
-import io.javalin.plugin.rendering.template.JavalinThymeleaf;
 
 public class Main {
 

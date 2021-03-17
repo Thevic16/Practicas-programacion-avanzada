@@ -1,6 +1,7 @@
 plugins {
     id 'java'
     id 'application'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
 mainClassName = 'edu.pucmm.eict.Main'
@@ -18,6 +19,12 @@ dependencies {
     compile "org.slf4j:slf4j-simple:1.7.30" // logger
     compile 'io.javalin:javalin:3.13.0'
     compile "org.thymeleaf:thymeleaf:3.0.11.RELEASE" //thymeleaf
+}
+
+shadowJar{
+    baseName = 'app1'
+    classifier = ''
+    archiveVersion = ''
 }
 
 test {

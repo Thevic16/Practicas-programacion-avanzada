@@ -1,0 +1,2 @@
+edu/pucmm/eict/Main.java
+ edu.pucmm.eict.Main
