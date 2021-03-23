@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="es" class="h-100" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.80.0">
+    <title>| Listado de Productos</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <!--<link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/cover/"> -->
+
+    <!-- Bootstrap core CSS -->
+    <!-- <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      /*
+ * Globals
+ */
+      /* Custom default button */
+      .btn-secondary,
+      .btn-secondary:hover,
+      .btn-secondary:focus {
+        color: #333;
+        text-shadow: none; /* Prevent inheritance from `body` */
+      }
+
+
+      /*
+       * Base structure
+       */
+
+      body {
+        text-shadow: 0 .05rem .1rem rgba(0, 0, 0, .5);
+        box-shadow: inset 0 0 5rem rgba(0, 0, 0, .5);
+      }
+
+      .cover-container {
+        max-width: 42em;
+      }
+
+
+      /*
+       * Header
+       */
+
+      .nav-masthead .nav-link {
+        padding: .25rem 0;
+        font-weight: 700;
+        color: rgba(255, 255, 255, .5);
+        background-color: transparent;
+        border-bottom: .25rem solid transparent;
+      }
+
+      .nav-masthead .nav-link:hover,
+      .nav-masthead .nav-link:focus {
+        border-bottom-color: rgba(255, 255, 255, .25);
+      }
+
+      .nav-masthead .nav-link + .nav-link {
+        margin-left: 1rem;
+      }
+
+      .nav-masthead .active {
+        color: #fff;
+        border-bottom-color: #fff;
+      }
+
+      input {
+        width: 40%;
+      }
+      a{
+        height: 40%;
+      }
+
+    </style>
+
+    
+    <!-- Custom styles for this template -->
+    <!-- <link href="cover.css" rel="stylesheet"> -->
+
+  </head>
+  <body class="d-flex h-100 text-center text-white bg-dark">
+    
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column" >
+  <header class="mb-auto">
+    <div>
+      <nav class="nav nav-masthead justify-content-center float-md-end">
+
+        <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" fill="currentColor" class="bi bi-cart-fill" viewBox="0 0 16 16">
+          <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+        </svg>
+        <h1>&nbsp &nbsp &nbsp </h1>
+        <a class="nav-link active" aria-current="page" href="#">Comprar</a>
+        <a class="nav-link" href="/ventasRealizadas/">Ventas Realizadas</a>
+        <a class="nav-link" href="/listarProductos/">Administrar Productos</a>
+        <a class="nav-link" href="/carritoDeCompra" th:text="'Carrito('+${cantidadCarrito}+')'" >Carrito (0)</a>
+      </nav>
+      <br>
+      <br>
+      <h3 class="float-md-start mb-0">Listado de Productos</h3>
+    </div>
+  </header>
+
+  <main class="px-3" style="overflow-x:auto;">
+
+    <table class="table table-dark table-hover">
+      <thead>
+      <tr>
+        <th scope="col">Producto</th>
+        <th scope="col">Precio(RD$)</th>
+        <th scope="col">Cantidad</th>
+        <th scope="col">Acción 1</th>
+        <th scope="col">Acción 2</th>
+      </tr>
+      </thead>
+      <tbody th:each="producto : ${productos}">
+          <tr>
+            <form method="post" action="/index/agregar/">
+              <th scope="row" th:text="${producto.nombre}" > Ram 64Gb </th>
+              <td th:text="${producto.precio}" >15</td>
+              <td><input type="number" name="cantidad" required></td>
+              <td><button type="submit" class="btn btn-light">Agregar</button></td>
+              <td><a th:href="'/index/VisualizarInfoProduct/'+${producto.id}" class="btn btn-light">Información</a></td>
+              <!--<td><button type="submit" class="btn btn-light" form="form2">Información</button></td>-->
+              <td><input type="hidden" id = "id" name="id" th:value="${producto.id}"></td>
+            </form>
+
+            <!--
+            <form method="post" action="/index/VisualizarInfoProduct/" id="form2">
+              <td><input type="hidden" id = "idVisualizar" name="idVisualizar" th:value="${producto.id}"></td>
+            </form>
+            -->
+          </tr>
+
+          <tr>
+          </tr>
+
+      </tbody>
+    </table>
+
+        <div>
+          <a href="/index/atrasPagina" class="btn btn-primary btn-light" th:if="${botonAtras}">Anterior</a>
+          <a href="/index/siguientePagina" class="btn btn-primary btn-light" th:if="${botonSiguiente}">Siguiente</a>
+        </div>
+
+  </main>
+
+
+
+
+      <footer class="mt-auto text-white-50">
+        <p>Sitio de Compras, Por Víctor Gómez.</p>
+      </footer>
+    </div>
+
+      </body>
+    </html>

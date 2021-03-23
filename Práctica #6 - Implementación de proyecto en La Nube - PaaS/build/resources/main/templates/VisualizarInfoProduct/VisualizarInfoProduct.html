@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.80.0">
+    <title>| Información Detallada Del Producto.</title>
+
+    <!-- <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sign-in/"> -->
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <!-- Bootstrap core CSS -->
+    <!-- <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            /*padding-top: 40px;*/
+            /*padding-bottom: 40px;*/
+            background-color: #f5f5f5;
+        }
+
+        .form-signin {
+            width: 100%;
+            max-width: 730px;
+            padding: 15px;
+            margin: auto;
+        }
+
+
+    </style>
+
+
+    <!-- Custom styles for this template -->
+    <link href="signin.css" rel="stylesheet">
+</head>
+<body class="text-center">
+
+<main class="form-signin">
+    <h1>Información Detallada Producto</h1>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Datos de la foto</th>
+            <th scope="col">Foto del producto</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="foto : ${fotos}">
+            <th scope="row" th:text="${foto.descripcion}"></th>
+            <td><img th:src="@{'data:'+${foto.getMimeType()}+';base64,'+${foto.getFotoBase64()}}" class="card-img-top" alt="Foto enviada"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th scope="col">Descripción del producto</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td scope="row" th:text="${producto.descripcion}"> </td>
+        </tr>
+        </tbody>
+    </table>
+    <h2>Comentar</h2>
+    <form method="post" action="/index/VisualizarInfoProduct/procecarComentario/">
+        <input type="text" id="nombreCliente" name="nombreCliente" class="form-control" placeholder="Nombre Cliente" required >
+        <br>
+        <textarea id="comentario" name="comentario" class="form-control" placeholder="Comentario" required></textarea>
+        <br>
+        <input type="hidden" id = "idProducto" name="idProducto" th:value="${producto.id}">
+        <button type="submit" class="btn btn-dark">Enviar</button>
+    </form>
+
+    <br>
+    <h2>Lista de Comentarios</h2>
+    <br>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="comentario : ${comentarios}">
+            <form method="post" action="/index/VisualizarInfoProduct/eliminarComentario/">
+                <th scope="row" th:text="${comentario.nombreCLiente}"></th>
+                <td th:text="${comentario.textoComentario}"></td>
+                <td><button type="submit" class="btn btn-danger" th:if="${login}" >Eliminar</button></td>
+                <td><input type="hidden" id = "idProducto2" name="idProducto2" th:value="${producto.id}"></td>
+                <td><input type="hidden" id = "idComentario" name="idComentario" th:value="${comentario.id}"></td>
+            </form>
+        </tr>
+        </tbody>
+    </table>
+
+    <br>
+    <a href="/index/VisualizarInfoProductVolver/" class="btn btn-dark" tabindex="-1" role="button" aria-disabled="true">Volver a la Página Principal</a>
+
+</main>
+
+</body>
+</html>

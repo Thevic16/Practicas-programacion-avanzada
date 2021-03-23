@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
+}
+
+mainClassName = 'edu.pucmm.eict.Main'
+
+group 'edu.pucmm.eict'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    compile 'io.javalin:javalin:3.13.0'
+    compile "org.slf4j:slf4j-simple:1.7.30" // logger
+    compile "org.thymeleaf:thymeleaf:3.0.11.RELEASE" //thymeleaf
+    compile 'com.h2database:h2:1.4.200' //H2
+    // https://mvnrepository.com/artifact/org.jasypt/jasypt
+    implementation group: 'org.jasypt', name: 'jasypt', version: '1.9.3'
+
+    //ORM - Hibernate.
+    compile 'org.hibernate:hibernate-core:5.4.17.Final'
+    compile 'org.hibernate:hibernate-entitymanager:5.4.17.Final'
+}
+
+shadowJar{
+    baseName = 'app'
+    classifier = ''
+    archiveVersion = ''
+}
+
+test {
+    useJUnitPlatform()
+}
