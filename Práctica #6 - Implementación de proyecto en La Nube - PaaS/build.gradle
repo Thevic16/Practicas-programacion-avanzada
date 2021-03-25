@@ -34,6 +34,10 @@ shadowJar{
     archiveVersion = ''
 }
 
+task stage{
+    dependsOn shadowJar
+}
+
 test {
     useJUnitPlatform()
 }
