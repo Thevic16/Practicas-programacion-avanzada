@@ -19,6 +19,8 @@ dependencies {
     compile 'io.javalin:javalin:3.13.0'
     compile "org.slf4j:slf4j-simple:1.7.30" // logger
     compile "org.thymeleaf:thymeleaf:3.0.11.RELEASE" //thymeleaf
+    //Agregando el OpenApi3
+    compile "io.javalin:javalin-openapi:3.9.1"
 }
 
 shadowJar{

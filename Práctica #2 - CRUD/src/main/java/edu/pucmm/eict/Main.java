@@ -2,12 +2,12 @@ package edu.pucmm.eict;
 
 import edu.pucmm.eict.util.*;
 import io.javalin.Javalin;
-import io.javalin.plugin.rendering.JavalinRenderer;
-import io.javalin.plugin.rendering.template.JavalinThymeleaf;
+import io.javalin.core.util.RouteOverviewPlugin;
+import io.javalin.plugin.openapi.OpenApiOptions;
+import io.javalin.plugin.openapi.OpenApiPlugin;
+import io.javalin.plugin.openapi.ui.SwaggerOptions;
+import io.swagger.v3.oas.models.info.Info;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
@@ -18,11 +18,14 @@ public class Main {
         */
         //Creando la instancia del servidor.
         //Creando la instancia del servidor.
+        //Creando la instancia del servidor.
         Javalin app = Javalin.create(config ->{
             config.addStaticFiles("/publico"); //desde la carpeta de resources
+            config.registerPlugin(new RouteOverviewPlugin("/rutas")); //aplicando plugins de las rutas
             config.enableCorsForAllOrigins();
+            config.registerPlugin(new OpenApiPlugin(getOpenApiOptions()));
+
         });
-        app.config.addStaticFiles("/publico");
         app.start(getHerokuAssignedPort());
 
 
@@ -40,5 +43,13 @@ public class Main {
         }
         return 7000; //Retorna el puerto por defecto en caso de no estar en Heroku.
     }
+
+    private static OpenApiOptions getOpenApiOptions() {
+        Info applicationInfo = new Info()
+                .version("1.0")
+                .description("My Application");
+        return new OpenApiOptions(applicationInfo).path("/openapi").swagger(new SwaggerOptions("/openapi-ui"));
+    }
+
 }
 
