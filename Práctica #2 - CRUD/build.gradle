@@ -27,7 +27,7 @@ shadowJar{
     archiveVersion = ''
 }
 
-task stage{
+task stage {
     dependsOn shadowJar
 }
 
