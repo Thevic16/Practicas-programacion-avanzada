@@ -21,14 +21,10 @@ public class Main {
         //Creando la instancia del servidor.
         Javalin app = Javalin.create(config ->{
             config.addStaticFiles("/publico"); //desde la carpeta de resources
-            config.registerPlugin(new RouteOverviewPlugin("/rutas")); //aplicando plugins de las rutas
-            config.enableCorsForAllOrigins();
-            config.registerPlugin(new OpenApiPlugin(getOpenApiOptions()));
-
         });
         app.start(getHerokuAssignedPort());
 
-
+        //si
         new Ruta(app,administracion).ejecutarRutas();
     }
 
@@ -42,13 +38,6 @@ public class Main {
             return Integer.parseInt(processBuilder.environment().get("PORT"));
         }
         return 7000; //Retorna el puerto por defecto en caso de no estar en Heroku.
-    }
-
-    private static OpenApiOptions getOpenApiOptions() {
-        Info applicationInfo = new Info()
-                .version("1.0")
-                .description("My Application");
-        return new OpenApiOptions(applicationInfo).path("/openapi").swagger(new SwaggerOptions("/openapi-ui"));
     }
 
 }
